@@ -11,7 +11,7 @@ export CLAUDE_HOME="$HOME/.claude"
 export CLAUDE_SETTINGS_HOME="$CLAUDE_HOME"
 mkdir -p "$CLAUDE_HOME/notifications"
 
-source "$ROOT_DIR/lib/code-notify/core/config.sh"
+source "$ROOT_DIR/lib/agent-notify/core/config.sh"
 
 notify_script="$test_dir/notify.sh"
 get_notify_script() {

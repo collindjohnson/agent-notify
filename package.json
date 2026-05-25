@@ -24,8 +24,7 @@
     "node": ">=18"
   },
   "bin": {
-    "agent-notify": "bin/npm-code-notify.js",
-    "code-notify": "bin/npm-code-notify.js",
+    "agent-notify": "bin/npm-agent-notify.js",
     "an": "bin/npm-an.js",
     "anp": "bin/npm-anp.js"
   },

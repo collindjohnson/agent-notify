@@ -43,12 +43,12 @@ jobs:
 
     - name: Test main script syntax
       run: |
-        bash -n bin/code-notify
+        bash -n bin/agent-notify
         echo "Main script syntax OK"
 
     - name: Test lib scripts syntax
       run: |
-        for file in lib/code-notify/**/*.sh; do
+        for file in lib/agent-notify/**/*.sh; do
           echo "Checking: $file"
           bash -n "$file"
         done
@@ -61,7 +61,7 @@ jobs:
 
     - name: Verify installation directories
       run: |
-        INSTALL_DIR="$HOME/.code-notify"
+        INSTALL_DIR="$HOME/.agent-notify"
 
         if [[ ! -d "$INSTALL_DIR" ]]; then
           echo "ERROR: Install directory not created: $INSTALL_DIR"
@@ -90,15 +90,15 @@ jobs:
     - name: Verify installed files
       run: |
         FILES=(
-          "$HOME/.code-notify/bin/code-notify"
-          "$HOME/.code-notify/lib/code-notify/core/config.sh"
-          "$HOME/.code-notify/lib/code-notify/core/notifier.sh"
-          "$HOME/.code-notify/lib/code-notify/commands/global.sh"
-          "$HOME/.code-notify/lib/code-notify/commands/project.sh"
-          "$HOME/.code-notify/lib/code-notify/utils/colors.sh"
-          "$HOME/.code-notify/lib/code-notify/utils/detect.sh"
-          "$HOME/.code-notify/lib/code-notify/utils/help.sh"                                   
-          "$HOME/.code-notify/lib/code-notify/utils/voice.sh"  
+          "$HOME/.agent-notify/bin/agent-notify"
+          "$HOME/.agent-notify/lib/agent-notify/core/config.sh"
+          "$HOME/.agent-notify/lib/agent-notify/core/notifier.sh"
+          "$HOME/.agent-notify/lib/agent-notify/commands/global.sh"
+          "$HOME/.agent-notify/lib/agent-notify/commands/project.sh"
+          "$HOME/.agent-notify/lib/agent-notify/utils/colors.sh"
+          "$HOME/.agent-notify/lib/agent-notify/utils/detect.sh"
+          "$HOME/.agent-notify/lib/agent-notify/utils/help.sh"                                   
+          "$HOME/.agent-notify/lib/agent-notify/utils/voice.sh"  
         )
 
         for file in "${FILES[@]}"; do
@@ -113,11 +113,11 @@ jobs:
       run: |
         BIN_DIR="$HOME/.local/bin"
 
-        if [[ ! -L "$BIN_DIR/code-notify" ]]; then
-          echo "ERROR: code-notify symlink not created"
+        if [[ ! -L "$BIN_DIR/agent-notify" ]]; then
+          echo "ERROR: agent-notify symlink not created"
           exit 1
         fi
-        echo "OK: code-notify symlink exists"
+        echo "OK: agent-notify symlink exists"
 
         if [[ ! -L "$BIN_DIR/an" ]]; then
           echo "ERROR: an symlink not created"
@@ -136,10 +136,10 @@ jobs:
         export PATH="$HOME/.local/bin:$PATH"
 
         # Test help
-        code-notify help
+        agent-notify help
 
         # Test version
-        code-notify version
+        agent-notify version
 
     - name: Test CLI aliases
       run: |
@@ -156,10 +156,10 @@ jobs:
       run: |
         export PATH="$HOME/.local/bin:$PATH"
         CURRENT_VERSION="$(an version | awk '{print $3}')"
-        UPDATE_OUTPUT="$(CODE_NOTIFY_LATEST_VERSION="$CURRENT_VERSION" an update check)"
+        UPDATE_OUTPUT="$(AGENT_NOTIFY_LATEST_VERSION="$CURRENT_VERSION" an update check)"
         echo "$UPDATE_OUTPUT"
 
-        if ! echo "$UPDATE_OUTPUT" | grep -q 'Code-Notify is up to date'; then
+        if ! echo "$UPDATE_OUTPUT" | grep -q 'Agent-Notify is up to date'; then
           echo "ERROR: update check did not report the install as current"
           exit 1
         fi
@@ -173,10 +173,10 @@ jobs:
       run: |
         export PATH="$HOME/.local/bin:$PATH"
         CURRENT_VERSION="$(an version | awk '{print $3}')"
-        UPDATE_OUTPUT="$(CODE_NOTIFY_LATEST_VERSION="$CURRENT_VERSION" an update)"
+        UPDATE_OUTPUT="$(AGENT_NOTIFY_LATEST_VERSION="$CURRENT_VERSION" an update)"
         echo "$UPDATE_OUTPUT"
 
-        if ! echo "$UPDATE_OUTPUT" | grep -q 'Code-Notify is up to date'; then
+        if ! echo "$UPDATE_OUTPUT" | grep -q 'Agent-Notify is up to date'; then
           echo "ERROR: update command did not skip reinstalling the current version"
           exit 1
         fi
@@ -265,7 +265,7 @@ jobs:
     - name: Test notifier script
       run: |
         # Test the notification script directly (may not show UI in CI)
-        NOTIFIER="$HOME/.code-notify/lib/code-notify/core/notifier.sh"
+        NOTIFIER="$HOME/.agent-notify/lib/agent-notify/core/notifier.sh"
         if [[ -f "$NOTIFIER" ]]; then
           chmod +x "$NOTIFIER"
           "$NOTIFIER" test 2>&1 || true
@@ -289,10 +289,10 @@ jobs:
     - name: Test direct script execution
       run: |
         # Test running directly without installation
-        chmod +x bin/code-notify
+        chmod +x bin/agent-notify
 
         # Export required paths
         export PATH="$PWD/bin:$PATH"
 
         # This should show help (may fail if deps not met, which is OK)
-        bin/code-notify help || echo "Direct execution test complete"
+        bin/agent-notify help || echo "Direct execution test complete"

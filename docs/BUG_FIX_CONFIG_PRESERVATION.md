@@ -131,7 +131,7 @@ echo '{"tools": {"enableHooks": false}}' > "$GEMINI_SETTINGS_FILE"
 
 **After:**
 ```bash
-# Only remove code-notify hooks
+# Only remove agent-notify hooks
 jq 'del(.hooks.Notification) | del(.hooks.AfterAgent)' settings.json
 ```
 
@@ -169,7 +169,7 @@ Run tests:
 
 | File | Changes |
 |------|---------|
-| `lib/code-notify/core/config.sh` | Fixed 3 functions to preserve user settings |
+| `lib/agent-notify/core/config.sh` | Fixed 3 functions to preserve user settings |
 | `tests/test-config-preservation.sh` | New test file |
 
 ## Migration Notes

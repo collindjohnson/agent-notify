@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Code-Notify Installation Script
+# Agent-Notify Installation Script
 # Desktop notifications for Claude Code, Codex, and Gemini CLI
 # For users who want to install without Homebrew
 
@@ -12,7 +12,7 @@ YELLOW='\033[0;33m'
 RED='\033[0;31m'
 RESET='\033[0m'
 
-echo "🔔 Code-Notify Installer"
+echo "🔔 Agent-Notify Installer"
 echo "========================="
 echo ""
 
@@ -32,7 +32,7 @@ case "$OS" in
         echo "  powershell -ExecutionPolicy Bypass -File install-windows.ps1"
         echo ""
         echo "Or download and run directly:"
-        echo "  irm https://raw.githubusercontent.com/mylee04/code-notify/main/scripts/install-windows.ps1 | iex"
+        echo "  irm https://raw.githubusercontent.com/collindjohnson/agent-notify/main/scripts/install-windows.ps1 | iex"
         echo ""
         exit 1
         ;;
@@ -90,18 +90,18 @@ case "$OS" in
 esac
 
 # Install to user's home directory
-INSTALL_DIR="$HOME/.code-notify"
+INSTALL_DIR="$HOME/.agent-notify"
 echo "Installing to: $INSTALL_DIR"
 
 # Create directories
 mkdir -p "$INSTALL_DIR/bin"
-mkdir -p "$INSTALL_DIR/lib/code-notify/commands"
-mkdir -p "$INSTALL_DIR/lib/code-notify/core"
-mkdir -p "$INSTALL_DIR/lib/code-notify/utils"
+mkdir -p "$INSTALL_DIR/lib/agent-notify/commands"
+mkdir -p "$INSTALL_DIR/lib/agent-notify/core"
+mkdir -p "$INSTALL_DIR/lib/agent-notify/utils"
 mkdir -p "$HOME/.claude/notifications"
 
 # GitHub raw URL base
-GITHUB_RAW="https://raw.githubusercontent.com/mylee04/code-notify/main"
+GITHUB_RAW="https://raw.githubusercontent.com/collindjohnson/agent-notify/main"
 
 # Check if running locally (repo exists) or via curl (need to download)
 if [[ -d "bin" ]] && [[ -d "lib" ]]; then
@@ -112,31 +112,31 @@ else
     echo "Downloading files from GitHub..."
 
     # Download main script
-    curl -fsSL "$GITHUB_RAW/bin/code-notify" -o "$INSTALL_DIR/bin/code-notify"
+    curl -fsSL "$GITHUB_RAW/bin/agent-notify" -o "$INSTALL_DIR/bin/agent-notify"
 
     # Download lib files
-    curl -fsSL "$GITHUB_RAW/lib/code-notify/commands/global.sh" -o "$INSTALL_DIR/lib/code-notify/commands/global.sh"
-    curl -fsSL "$GITHUB_RAW/lib/code-notify/commands/project.sh" -o "$INSTALL_DIR/lib/code-notify/commands/project.sh"
-    curl -fsSL "$GITHUB_RAW/lib/code-notify/core/config.sh" -o "$INSTALL_DIR/lib/code-notify/core/config.sh"
-    curl -fsSL "$GITHUB_RAW/lib/code-notify/core/notifier.sh" -o "$INSTALL_DIR/lib/code-notify/core/notifier.sh"
-    curl -fsSL "$GITHUB_RAW/lib/code-notify/utils/colors.sh" -o "$INSTALL_DIR/lib/code-notify/utils/colors.sh"
-    curl -fsSL "$GITHUB_RAW/lib/code-notify/utils/detect.sh" -o "$INSTALL_DIR/lib/code-notify/utils/detect.sh"
-    curl -fsSL "$GITHUB_RAW/lib/code-notify/utils/help.sh" -o "$INSTALL_DIR/lib/code-notify/utils/help.sh"
-    curl -fsSL "$GITHUB_RAW/lib/code-notify/utils/voice.sh" -o "$INSTALL_DIR/lib/code-notify/utils/voice.sh"
-    curl -fsSL "$GITHUB_RAW/lib/code-notify/utils/sound.sh" -o "$INSTALL_DIR/lib/code-notify/utils/sound.sh"
-    curl -fsSL "$GITHUB_RAW/lib/code-notify/utils/click-through.sh" -o "$INSTALL_DIR/lib/code-notify/utils/click-through.sh"
-    curl -fsSL "$GITHUB_RAW/lib/code-notify/utils/click-through-store.sh" -o "$INSTALL_DIR/lib/code-notify/utils/click-through-store.sh"
-    curl -fsSL "$GITHUB_RAW/lib/code-notify/utils/click-through-runtime.sh" -o "$INSTALL_DIR/lib/code-notify/utils/click-through-runtime.sh"
-    curl -fsSL "$GITHUB_RAW/lib/code-notify/utils/click-through-resolver.sh" -o "$INSTALL_DIR/lib/code-notify/utils/click-through-resolver.sh"
+    curl -fsSL "$GITHUB_RAW/lib/agent-notify/commands/global.sh" -o "$INSTALL_DIR/lib/agent-notify/commands/global.sh"
+    curl -fsSL "$GITHUB_RAW/lib/agent-notify/commands/project.sh" -o "$INSTALL_DIR/lib/agent-notify/commands/project.sh"
+    curl -fsSL "$GITHUB_RAW/lib/agent-notify/core/config.sh" -o "$INSTALL_DIR/lib/agent-notify/core/config.sh"
+    curl -fsSL "$GITHUB_RAW/lib/agent-notify/core/notifier.sh" -o "$INSTALL_DIR/lib/agent-notify/core/notifier.sh"
+    curl -fsSL "$GITHUB_RAW/lib/agent-notify/utils/colors.sh" -o "$INSTALL_DIR/lib/agent-notify/utils/colors.sh"
+    curl -fsSL "$GITHUB_RAW/lib/agent-notify/utils/detect.sh" -o "$INSTALL_DIR/lib/agent-notify/utils/detect.sh"
+    curl -fsSL "$GITHUB_RAW/lib/agent-notify/utils/help.sh" -o "$INSTALL_DIR/lib/agent-notify/utils/help.sh"
+    curl -fsSL "$GITHUB_RAW/lib/agent-notify/utils/voice.sh" -o "$INSTALL_DIR/lib/agent-notify/utils/voice.sh"
+    curl -fsSL "$GITHUB_RAW/lib/agent-notify/utils/sound.sh" -o "$INSTALL_DIR/lib/agent-notify/utils/sound.sh"
+    curl -fsSL "$GITHUB_RAW/lib/agent-notify/utils/click-through.sh" -o "$INSTALL_DIR/lib/agent-notify/utils/click-through.sh"
+    curl -fsSL "$GITHUB_RAW/lib/agent-notify/utils/click-through-store.sh" -o "$INSTALL_DIR/lib/agent-notify/utils/click-through-store.sh"
+    curl -fsSL "$GITHUB_RAW/lib/agent-notify/utils/click-through-runtime.sh" -o "$INSTALL_DIR/lib/agent-notify/utils/click-through-runtime.sh"
+    curl -fsSL "$GITHUB_RAW/lib/agent-notify/utils/click-through-resolver.sh" -o "$INSTALL_DIR/lib/agent-notify/utils/click-through-resolver.sh"
 fi
 
 # Update paths in the main script
-sed -i.bak "s|\$(dirname \"\$SCRIPT_DIR\")/lib/code-notify|$INSTALL_DIR/lib/code-notify|g" "$INSTALL_DIR/bin/code-notify"
-rm "$INSTALL_DIR/bin/code-notify.bak"
+sed -i.bak "s|\$(dirname \"\$SCRIPT_DIR\")/lib/agent-notify|$INSTALL_DIR/lib/agent-notify|g" "$INSTALL_DIR/bin/agent-notify"
+rm "$INSTALL_DIR/bin/agent-notify.bak"
 
 # Make executable
-chmod +x "$INSTALL_DIR/bin/code-notify"
-chmod +x "$INSTALL_DIR/lib/code-notify/core/notifier.sh"
+chmod +x "$INSTALL_DIR/bin/agent-notify"
+chmod +x "$INSTALL_DIR/lib/agent-notify/core/notifier.sh"
 
 # Create symlinks in a directory that's likely in PATH
 if [[ -d "$HOME/.local/bin" ]]; then
@@ -149,12 +149,12 @@ else
 fi
 
 # Create symlinks
-ln -sf "$INSTALL_DIR/bin/code-notify" "$BIN_DIR/code-notify"
-ln -sf "$INSTALL_DIR/bin/code-notify" "$BIN_DIR/an"
-ln -sf "$INSTALL_DIR/bin/code-notify" "$BIN_DIR/anp"
+ln -sf "$INSTALL_DIR/bin/agent-notify" "$BIN_DIR/agent-notify"
+ln -sf "$INSTALL_DIR/bin/agent-notify" "$BIN_DIR/an"
+ln -sf "$INSTALL_DIR/bin/agent-notify" "$BIN_DIR/anp"
 
 # Repair stale Claude hooks from older claude-notify installs when present.
-"$INSTALL_DIR/bin/code-notify" repair-hooks --quiet || true
+"$INSTALL_DIR/bin/agent-notify" repair-hooks --quiet || true
 
 echo -e "${GREEN}✅ Installation complete!${RESET}"
 echo ""
@@ -169,7 +169,7 @@ if [[ ":$PATH:" != *":$BIN_DIR:"* ]]; then
 fi
 
 echo "Run these commands to get started:"
-echo "  code-notify setup    # Initial setup"
+echo "  agent-notify setup    # Initial setup"
 echo "  an on                  # Enable notifications"
 echo ""
-echo "For more info: https://github.com/mylee04/code-notify"
+echo "For more info: https://github.com/collindjohnson/agent-notify"

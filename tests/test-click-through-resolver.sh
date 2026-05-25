@@ -17,11 +17,11 @@ test_dir="$(mktemp -d)"
 trap 'rm -rf "$test_dir"' EXIT
 
 export HOME="$test_dir/home"
-config_file="$HOME/.code-notify/click-through.conf"
+config_file="$HOME/.agent-notify/click-through.conf"
 apps_dir="$HOME/Applications"
 pycharm_app="$apps_dir/PyCharm.app"
 
-mkdir -p "$HOME/.code-notify" "$pycharm_app/Contents"
+mkdir -p "$HOME/.agent-notify" "$pycharm_app/Contents"
 
 cat > "$pycharm_app/Contents/Info.plist" <<'EOF'
 <?xml version="1.0" encoding="UTF-8"?>
@@ -34,15 +34,15 @@ cat > "$pycharm_app/Contents/Info.plist" <<'EOF'
 </plist>
 EOF
 
-source "$ROOT_DIR/lib/code-notify/utils/click-through-store.sh"
-source "$ROOT_DIR/lib/code-notify/utils/click-through-runtime.sh"
-source "$ROOT_DIR/lib/code-notify/utils/click-through-resolver.sh"
+source "$ROOT_DIR/lib/agent-notify/utils/click-through-store.sh"
+source "$ROOT_DIR/lib/agent-notify/utils/click-through-runtime.sh"
+source "$ROOT_DIR/lib/agent-notify/utils/click-through-resolver.sh"
 
 [[ "$(click_through_lookup_builtin_bundle_id "ghostty")" == "com.mitchellh.ghostty" ]] || fail "builtin key lookup should use the canonical mapping table"
 [[ "$(click_through_lookup_builtin_term_program "com.github.wez.wezterm")" == "WezTerm" ]] || fail "builtin reverse lookup should use the canonical mapping table"
 
 cat > "$config_file" <<'EOF'
-# Code-Notify click-through configuration
+# Agent-Notify click-through configuration
 # Maps TERM_PROGRAM values to macOS bundle IDs
 
 JetBrains-JediTerm=com.jetbrains.pycharm
@@ -54,13 +54,13 @@ TERM_PROGRAM="JetBrains-JediTerm"
 [[ "$(click_through_resolve_configured_bundle_id)" == "com.jetbrains.pycharm" ]] || fail "configured resolution should prefer the live TERM_PROGRAM"
 
 TERM_PROGRAM=""
-CODE_NOTIFY_CLICK_THROUGH_APP_PATH="$pycharm_app"
+AGENT_NOTIFY_CLICK_THROUGH_APP_PATH="$pycharm_app"
 [[ "$(click_through_resolve_configured_bundle_id)" == "com.jetbrains.pycharm" ]] || fail "configured resolution should fall back to the current app bundle ID"
 
 rm -f "$config_file"
 
 TERM_PROGRAM="cursor"
-CODE_NOTIFY_CLICK_THROUGH_APP_PATH=""
+AGENT_NOTIFY_CLICK_THROUGH_APP_PATH=""
 [[ "$(click_through_resolve_activation_bundle_id)" == "com.todesktop.230313mzl4w4u92" ]] || fail "activation resolution should fall back to built-in TERM_PROGRAM mappings"
 
 TERM_PROGRAM="JetBrains-JediTerm"

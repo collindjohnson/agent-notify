@@ -25,7 +25,7 @@ description: Create a well-formatted commit
 make test
 
 # Check for lint issues
-shellcheck bin/code-notify lib/code-notify/**/*.sh
+shellcheck bin/agent-notify lib/agent-notify/**/*.sh
 ```
 
 ### 2. Review Changes

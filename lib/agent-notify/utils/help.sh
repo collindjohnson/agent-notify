@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Shared help text for Code-Notify
+# Shared help text for Agent-Notify
 
 is_macos_help_context() {
     [[ "$(uname -s)" == "Darwin" ]]
@@ -11,7 +11,7 @@ is_macos_help_context() {
 show_help() {
     local cmd_name="${1:-an}"
     cat << EOF
-${BOLD}Code-Notify${RESET} - Desktop notifications for AI coding tools
+${BOLD}Agent-Notify${RESET} - Desktop notifications for AI coding tools
 
 ${BOLD}SUPPORTED TOOLS:${RESET}
     Claude Code, OpenAI Codex, Google Gemini CLI, Cursor Agent
@@ -29,7 +29,7 @@ ${BOLD}COMMANDS:${RESET}
     ${GREEN}status${RESET}          Show status for all tools
     ${GREEN}status${RESET} all      Show status for all tools (explicit alias)
     ${GREEN}test${RESET}            Send a test notification
-    ${GREEN}update${RESET} [check]  Update code-notify or check the latest release
+    ${GREEN}update${RESET} [check]  Update agent-notify or check the latest release
     ${GREEN}alerts${RESET} <cmd>    Configure which events trigger alerts
     ${GREEN}voice${RESET} <cmd>     Voice notification commands
 EOF
@@ -93,7 +93,7 @@ ${BOLD}CLICK-THROUGH COMMANDS:${RESET}
     ${GREEN}click-through remove${RESET}       Interactively remove mappings
     ${GREEN}click-through reset${RESET}        Reset to built-in defaults
 
-    Note: controls which app Code-Notify activates when you click a macOS notification.
+    Note: controls which app Agent-Notify activates when you click a macOS notification.
 EOF
     fi
 
@@ -134,7 +134,7 @@ EOF
     anp on                  # Enable for current project
 
 ${BOLD}MORE INFO:${RESET}
-    ${DIM}https://github.com/mylee04/code-notify${RESET}
+    ${DIM}https://github.com/collindjohnson/agent-notify${RESET}
 
 EOF
 }

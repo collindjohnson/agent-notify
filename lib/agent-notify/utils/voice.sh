@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Voice notification utilities for Code-Notify
+# Voice notification utilities for Agent-Notify
 
 # Voice configuration paths
 VOICE_DIR="$HOME/.claude/notifications"

@@ -8,7 +8,7 @@ set -e
 FILE_PATH="${1:-}"
 
 # Only run on shell files
-if [[ "$FILE_PATH" != *.sh ]] && [[ "$FILE_PATH" != */code-notify ]]; then
+if [[ "$FILE_PATH" != *.sh ]] && [[ "$FILE_PATH" != */agent-notify ]]; then
     exit 0
 fi
 

@@ -22,7 +22,7 @@ description: Validate shell script syntax and best practices
 ### 1. Run Shellcheck
 
 ```bash
-shellcheck bin/code-notify lib/code-notify/**/*.sh
+shellcheck bin/agent-notify lib/agent-notify/**/*.sh
 ```
 
 ### 2. Check PowerShell Syntax

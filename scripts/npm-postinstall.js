@@ -4,7 +4,7 @@
 const { spawnSync } = require('node:child_process');
 const path = require('node:path');
 
-if (process.env.CODE_NOTIFY_SKIP_POSTINSTALL === '1') {
+if (process.env.AGENT_NOTIFY_SKIP_POSTINSTALL === '1') {
   process.exit(0);
 }
 
@@ -17,14 +17,14 @@ if (!isGlobalInstall) {
 }
 
 if (process.platform !== 'win32') {
-  const repairCommand = path.resolve(__dirname, '..', 'bin', 'npm-code-notify.js');
+  const repairCommand = path.resolve(__dirname, '..', 'bin', 'npm-agent-notify.js');
   const result = spawnSync(process.execPath, [repairCommand, 'repair-hooks', '--quiet'], {
     stdio: 'inherit',
     env: process.env
   });
 
   if (result.error || result.status !== 0) {
-    console.warn('[code-notify] Legacy Claude hook repair did not complete during npm install.');
+    console.warn('[agent-notify] Legacy Claude hook repair did not complete during npm install.');
   }
 
   process.exit(0);
@@ -54,11 +54,11 @@ for (const candidate of candidates) {
   }
 
   if (result.error || result.status !== 0) {
-    console.warn('[code-notify] Windows bootstrap did not complete during npm install.');
+    console.warn('[agent-notify] Windows bootstrap did not complete during npm install.');
   }
 
   process.exit(0);
 }
 
-console.warn('[code-notify] PowerShell was not found during npm postinstall; first run will retry bootstrap.');
+console.warn('[agent-notify] PowerShell was not found during npm postinstall; first run will retry bootstrap.');
 process.exit(0);

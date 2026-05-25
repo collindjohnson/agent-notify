@@ -51,11 +51,11 @@ SH
         export CLAUDE_HOME="$HOME/.claude"
         cd "$project_dir"
 
-        source "$SCRIPT_DIR/../lib/code-notify/utils/colors.sh"
-        source "$SCRIPT_DIR/../lib/code-notify/utils/detect.sh"
-        source "$SCRIPT_DIR/../lib/code-notify/utils/help.sh"
-        source "$SCRIPT_DIR/../lib/code-notify/core/config.sh"
-        source "$SCRIPT_DIR/../lib/code-notify/commands/project.sh"
+        source "$SCRIPT_DIR/../lib/agent-notify/utils/colors.sh"
+        source "$SCRIPT_DIR/../lib/agent-notify/utils/detect.sh"
+        source "$SCRIPT_DIR/../lib/agent-notify/utils/help.sh"
+        source "$SCRIPT_DIR/../lib/agent-notify/core/config.sh"
+        source "$SCRIPT_DIR/../lib/agent-notify/commands/project.sh"
 
         get_notify_script() {
             echo "$notify_stub"

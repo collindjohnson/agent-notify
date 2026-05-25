@@ -1,4 +1,4 @@
-# Makefile for Code-Notify
+# Makefile for Agent-Notify
 
 .PHONY: test install clean lint help
 
@@ -9,18 +9,18 @@ test:
 
 # Install locally for development
 install:
-	@echo "Installing code-notify locally..."
-	@chmod +x bin/code-notify
+	@echo "Installing agent-notify locally..."
+	@chmod +x bin/agent-notify
 	@mkdir -p $(HOME)/.local/bin
-	@ln -sf $(PWD)/bin/code-notify $(HOME)/.local/bin/code-notify
-	@ln -sf $(PWD)/bin/code-notify $(HOME)/.local/bin/an
-	@ln -sf $(PWD)/bin/code-notify $(HOME)/.local/bin/anp
+	@ln -sf $(PWD)/bin/agent-notify $(HOME)/.local/bin/agent-notify
+	@ln -sf $(PWD)/bin/agent-notify $(HOME)/.local/bin/an
+	@ln -sf $(PWD)/bin/agent-notify $(HOME)/.local/bin/anp
 	@echo "Installed. Make sure $(HOME)/.local/bin is in your PATH"
 
 # Uninstall local installation
 uninstall:
 	@echo "Removing local installation..."
-	@rm -f $(HOME)/.local/bin/code-notify
+	@rm -f $(HOME)/.local/bin/agent-notify
 	@rm -f $(HOME)/.local/bin/an
 	@rm -f $(HOME)/.local/bin/anp
 	@echo "Uninstalled."
@@ -28,14 +28,14 @@ uninstall:
 # Clean up backup files and caches
 clean:
 	@echo "Cleaning up..."
-	@rm -rf $(HOME)/.config/code-notify/backups/*
+	@rm -rf $(HOME)/.config/agent-notify/backups/*
 	@echo "Cleaned."
 
 # Basic shell script linting (requires shellcheck)
 lint:
 	@echo "Linting shell scripts..."
 	@if command -v shellcheck >/dev/null 2>&1; then \
-		shellcheck bin/code-notify lib/code-notify/**/*.sh; \
+		shellcheck bin/agent-notify lib/agent-notify/**/*.sh; \
 	else \
 		echo "shellcheck not installed. Install with: brew install shellcheck"; \
 		exit 1; \
@@ -43,7 +43,7 @@ lint:
 
 # Show help
 help:
-	@echo "Code-Notify Makefile"
+	@echo "Agent-Notify Makefile"
 	@echo ""
 	@echo "Usage: make [target]"
 	@echo ""

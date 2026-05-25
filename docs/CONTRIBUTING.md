@@ -1,6 +1,6 @@
-# Contributing to Code-Notify
+# Contributing to Agent-Notify
 
-First off, thank you for considering contributing to Code-Notify! 🎉
+First off, thank you for considering contributing to Agent-Notify! 🎉
 
 ## How Can I Contribute?
 
@@ -35,11 +35,11 @@ Enhancement suggestions are welcome! Please:
 
 ```bash
 # Clone your fork
-git clone https://github.com/YOUR_USERNAME/code-notify.git
-cd code-notify
+git clone https://github.com/YOUR_USERNAME/agent-notify.git
+cd agent-notify
 
 # Make scripts executable
-chmod +x bin/code-notify
+chmod +x bin/agent-notify
 
 # Add to PATH for testing
 export PATH="$PWD/bin:$PATH"

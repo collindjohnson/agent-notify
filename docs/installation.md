@@ -1,30 +1,30 @@
-# Code-Notify Installation Guide
+# Agent-Notify Installation Guide
 
 > This guide is designed for both humans and LLM agents. If you're an AI agent, follow the automated steps below.
 
 ## Quick Overview
 
-Code-Notify adds desktop notifications to Claude Code, Codex, and Gemini CLI. You'll get alerts when:
+Agent-Notify adds desktop notifications to Claude Code, Codex, and Gemini CLI. You'll get alerts when:
 
 - Tasks complete
 - Claude or Gemini needs your input
 - Voice announcements (macOS)
 
-Codex currently exposes completion notifications through its `notify` hook. Approval and `request_permissions` prompts do not currently trigger Code-Notify through Codex.
+Codex currently exposes completion notifications through its `notify` hook. Approval and `request_permissions` prompts do not currently trigger Agent-Notify through Codex.
 
 Supported upgrade paths also repair stale `claude-notify`-style Claude hooks automatically when they are detected.
 
 ## For LLM Agents
 
-Execute these commands to install code-notify:
+Execute these commands to install agent-notify:
 
 ```bash
 # 1. Clone the repository
-git clone https://github.com/mylee04/code-notify.git /tmp/code-notify
+git clone https://github.com/collindjohnson/agent-notify.git /tmp/agent-notify
 
 # 2. Run the installer
-chmod +x /tmp/code-notify/scripts/install.sh
-/tmp/code-notify/scripts/install.sh
+chmod +x /tmp/agent-notify/scripts/install.sh
+/tmp/agent-notify/scripts/install.sh
 
 # 3. Reload shell
 exec $SHELL
@@ -36,7 +36,7 @@ an on
 an test
 
 # 6. Clean up
-rm -rf /tmp/code-notify
+rm -rf /tmp/agent-notify
 ```
 
 ### Verify Installation
@@ -44,7 +44,7 @@ rm -rf /tmp/code-notify
 After installation, confirm these work:
 
 ```bash
-an version    # Should show: code-notify version X.X.X
+an version    # Should show: agent-notify version X.X.X
 an status     # Should show: Global notifications: ENABLED
 an test       # Should trigger a desktop notification
 ```
@@ -93,7 +93,7 @@ an status
 
 After installation, these files are created:
 
-- `~/.code-notify/` - Main installation directory
+- `~/.agent-notify/` - Main installation directory
 - `~/.claude/settings.json` - Hook configuration on the default Claude Code path
 - `~/.config/.claude/settings.json` - Hook configuration on some Windows Claude Code setups
 - `~/.claude/notifications/voice-enabled` - Voice setting (if enabled)
@@ -105,8 +105,8 @@ After installation, these files are created:
 an off
 
 # Remove installation
-rm -rf ~/.code-notify
-rm -f ~/.local/bin/an ~/.local/bin/anp ~/.local/bin/code-notify
+rm -rf ~/.agent-notify
+rm -f ~/.local/bin/an ~/.local/bin/anp ~/.local/bin/agent-notify
 rm -rf ~/.claude/notifications
 ```
 
@@ -117,15 +117,15 @@ rm -rf ~/.claude/notifications
 ### macOS (Homebrew) - Recommended
 
 ```bash
-brew tap mylee04/tools
-brew install code-notify
+brew tap collindjohnson/tools
+brew install agent-notify
 an on
 ```
 
 ### Linux / WSL
 
 ```bash
-curl -sSL https://raw.githubusercontent.com/mylee04/code-notify/main/scripts/install.sh | bash
+curl -sSL https://raw.githubusercontent.com/collindjohnson/agent-notify/main/scripts/install.sh | bash
 exec $SHELL
 an on
 ```
@@ -133,7 +133,7 @@ an on
 ### npm (macOS / Linux / Windows)
 
 ```bash
-npm install -g code-notify
+npm install -g agent-notify
 an on
 ```
 
@@ -149,8 +149,8 @@ an test
 ### Manual Installation
 
 ```bash
-git clone https://github.com/mylee04/code-notify.git
-cd code-notify
+git clone https://github.com/collindjohnson/agent-notify.git
+cd agent-notify
 ./scripts/install.sh
 ```
 
@@ -162,7 +162,7 @@ cd code-notify
 | `an off`      | Disable notifications           |
 | `an test`     | Send test notification          |
 | `an status`   | Check current status            |
-| `an update`   | Update code-notify              |
+| `an update`   | Update agent-notify              |
 | `an update check` | Check the latest release and show the update command |
 | `an voice on` | Enable voice (macOS)            |
 | `anp on`      | Enable for current project only |

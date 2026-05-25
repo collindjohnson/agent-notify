@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Sound notification utilities for Code-Notify
+# Sound notification utilities for Agent-Notify
 
 # Sound configuration paths
 SOUND_DIR="$HOME/.claude/notifications"

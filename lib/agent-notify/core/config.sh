@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Configuration management for Code-Notify
+# Configuration management for Agent-Notify
 
 # Default paths - Claude Code
 DEFAULT_CLAUDE_HOME="$HOME/.claude"
@@ -22,7 +22,7 @@ fi
 GLOBAL_SETTINGS_FILE="$RESOLVED_CLAUDE_SETTINGS_HOME/settings.json"
 GLOBAL_HOOKS_FILE="$RESOLVED_CLAUDE_SETTINGS_HOME/hooks.json"  # Legacy support
 GLOBAL_HOOKS_DISABLED="$RESOLVED_CLAUDE_SETTINGS_HOME/hooks.json.disabled"
-CONFIG_DIR="$HOME/.config/code-notify"
+CONFIG_DIR="$HOME/.config/agent-notify"
 CONFIG_FILE="$CONFIG_DIR/config.json"
 BACKUP_DIR="$CONFIG_DIR/backups"
 
@@ -130,7 +130,7 @@ toml_has_top_level_key() {
     ' "$file"
 }
 
-# Insert Code-Notify's top-level notify key before the first TOML table.
+# Insert Agent-Notify's top-level notify key before the first TOML table.
 upsert_codex_notify_config() {
     local file="$1"
     local notify_line="$2"
@@ -140,8 +140,8 @@ upsert_codex_notify_config() {
     dir_path=$(dirname "$file")
     tmp_file=$(mktemp "${dir_path}/.tmp.XXXXXX") || return 1
 
-    awk -v comment_line="# Code-Notify: Desktop notifications" -v notify_line="$notify_line" '
-        /^[[:space:]]*# Code-Notify: Desktop notifications[[:space:]]*$/ {
+    awk -v comment_line="# Agent-Notify: Desktop notifications" -v notify_line="$notify_line" '
+        /^[[:space:]]*# Agent-Notify: Desktop notifications[[:space:]]*$/ {
             next
         }
         /^[[:space:]]*notify[[:space:]]*=/ {
@@ -275,15 +275,15 @@ get_project_claude_stop_command() {
 }
 
 get_managed_claude_event_pattern() {
-    printf '%s\n' '(claude-notify|code-notify.*notifier\.sh|(?:^|[\\/])notify\.(?:ps1|sh)).*(SubagentStart|SubagentStop|TeammateIdle|TaskCreated|TaskCompleted)(?:\s|$)'
+    printf '%s\n' '(claude-notify|agent-notify.*notifier\.sh|(?:^|[\\/])notify\.(?:ps1|sh)).*(SubagentStart|SubagentStop|TeammateIdle|TaskCreated|TaskCompleted)(?:\s|$)'
 }
 
 get_managed_claude_notification_pattern() {
-    printf '%s\n' '(claude-notify|code-notify.*notifier\.sh|(?:^|[\\/])notify\.(?:ps1|sh)).*(notification|PreToolUse)(?:\s|$)'
+    printf '%s\n' '(claude-notify|agent-notify.*notifier\.sh|(?:^|[\\/])notify\.(?:ps1|sh)).*(notification|PreToolUse)(?:\s|$)'
 }
 
 get_managed_claude_stop_pattern() {
-    printf '%s\n' '(claude-notify|code-notify.*notifier\.sh|(?:^|[\\/])notify\.(?:ps1|sh)).*stop(?:\s|$)'
+    printf '%s\n' '(claude-notify|agent-notify.*notifier\.sh|(?:^|[\\/])notify\.(?:ps1|sh)).*stop(?:\s|$)'
 }
 
 has_claude_hooks_for_commands() {
@@ -388,9 +388,9 @@ PYTHON
     grep -qF "\"command\": \"$stop_cmd\"" "$file" || return 1
 
     local event
-    local -a _code_notify_events=()
-    IFS='|' read -r -a _code_notify_events <<< "$event_types"
-    for event in "${_code_notify_events[@]}"; do
+    local -a _agent_notify_events=()
+    IFS='|' read -r -a _agent_notify_events <<< "$event_types"
+    for event in "${_agent_notify_events[@]}"; do
         [[ -n "$event" ]] || continue
         grep -qF "\"command\": \"${event_prefix}${event}${event_suffix}\"" "$file" || return 1
     done
@@ -561,8 +561,8 @@ backup_config() {
 # Get notification script path
 get_notify_script() {
     # First check if installed via Homebrew
-    if [[ -f "/usr/local/opt/code-notify/lib/code-notify/core/notifier.sh" ]]; then
-        echo "/usr/local/opt/code-notify/lib/code-notify/core/notifier.sh"
+    if [[ -f "/usr/local/opt/agent-notify/lib/agent-notify/core/notifier.sh" ]]; then
+        echo "/usr/local/opt/agent-notify/lib/agent-notify/core/notifier.sh"
     # Then check home directory
     elif [[ -f "$HOME/.claude/notifications/notify.sh" ]]; then
         echo "$HOME/.claude/notifications/notify.sh"
@@ -994,7 +994,7 @@ enable_project_hooks_in_settings() {
         " claude $(shell_quote "$project_name")"
 }
 
-# Check if project has settings.json with code-notify hooks
+# Check if project has settings.json with agent-notify hooks
 is_enabled_project_settings() {
     local project_root=$(get_project_root 2>/dev/null || echo "$PWD")
     local project_settings="$project_root/$PROJECT_SETTINGS_FILE"
@@ -1034,7 +1034,7 @@ enable_codex_hooks() {
 # Codex CLI Configuration
 # https://developers.openai.com/codex/config-reference/
 
-# Code-Notify: Desktop notifications
+# Agent-Notify: Desktop notifications
 notify = ["$escaped_notify_script", "codex"]
 EOF
     fi
@@ -1050,7 +1050,7 @@ disable_codex_hooks() {
     backup_config "$CODEX_CONFIG_FILE"
 
     # Remove notify line and comment (BSD sed compatible)
-    sed -i '' '/^# Code-Notify/d' "$CODEX_CONFIG_FILE" 2>/dev/null || sed -i '/^# Code-Notify/d' "$CODEX_CONFIG_FILE"
+    sed -i '' '/^# Agent-Notify/d' "$CODEX_CONFIG_FILE" 2>/dev/null || sed -i '/^# Agent-Notify/d' "$CODEX_CONFIG_FILE"
     sed -i '' '/^notify.*=/d' "$CODEX_CONFIG_FILE" 2>/dev/null || sed -i '/^notify.*=/d' "$CODEX_CONFIG_FILE"
 }
 
@@ -1091,7 +1091,7 @@ enable_gemini_hooks() {
             .hooks.Notification = [{
                 "matcher": "",
                 "hooks": [{
-                    "name": "code-notify-notification",
+                    "name": "agent-notify-notification",
                     "type": "command",
                     "command": ($script + " notification gemini"),
                     "description": "Desktop notification when input needed"
@@ -1100,7 +1100,7 @@ enable_gemini_hooks() {
             .hooks.AfterAgent = [{
                 "matcher": "",
                 "hooks": [{
-                    "name": "code-notify-complete",
+                    "name": "agent-notify-complete",
                     "type": "command",
                     "command": ($script + " stop gemini"),
                     "description": "Desktop notification when task complete"
@@ -1144,7 +1144,7 @@ settings.setdefault('hooks', {})['enabled'] = True
 settings['hooks']['Notification'] = [{
     'matcher': '',
     'hooks': [{
-        'name': 'code-notify-notification',
+        'name': 'agent-notify-notification',
         'type': 'command',
         'command': f'{script} notification gemini',
         'description': 'Desktop notification when input needed'
@@ -1153,7 +1153,7 @@ settings['hooks']['Notification'] = [{
 settings['hooks']['AfterAgent'] = [{
     'matcher': '',
     'hooks': [{
-        'name': 'code-notify-complete',
+        'name': 'agent-notify-complete',
         'type': 'command',
         'command': f'{script} stop gemini',
         'description': 'Desktop notification when task complete'
@@ -1194,7 +1194,7 @@ disable_gemini_hooks() {
         local settings new_settings
         settings=$(cat "$GEMINI_SETTINGS_FILE")
 
-        # Remove code-notify specific hooks with error checking
+        # Remove agent-notify specific hooks with error checking
         if ! new_settings=$(echo "$settings" | jq 'del(.hooks.Notification) | del(.hooks.AfterAgent) | del(.hooks.enabled)' 2>/dev/null); then
             echo "Error: Failed to parse configuration JSON" >&2
             echo "File unchanged: $GEMINI_SETTINGS_FILE" >&2
@@ -1275,7 +1275,7 @@ get_cursor_command() {
 is_cursor_wrapper_managed() {
     local wrapper
     wrapper="$(get_cursor_notify_wrapper)"
-    [[ -f "$wrapper" ]] && grep -q "Code-Notify Cursor Agent wrapper" "$wrapper" 2>/dev/null
+    [[ -f "$wrapper" ]] && grep -q "Agent-Notify Cursor Agent wrapper" "$wrapper" 2>/dev/null
 }
 
 is_cursor_enabled() {
@@ -1298,7 +1298,7 @@ enable_cursor_hooks() {
     fi
 
     atomic_write "$wrapper" "#!/bin/bash
-# Code-Notify Cursor Agent wrapper
+# Agent-Notify Cursor Agent wrapper
 set -u
 
 NOTIFY_SCRIPT=\"$(toml_escape_string "$notify_script")\"
@@ -1317,7 +1317,7 @@ Usage:
   cursor-notify agent [cursor agent options] [prompt...]
   cursor-notify --test
 
-Runs Cursor Agent and sends a Code-Notify desktop notification when it exits.
+Runs Cursor Agent and sends a Agent-Notify desktop notification when it exits.
 EOF
     exit 0
 fi
@@ -1493,15 +1493,15 @@ append_unique_notify_type() {
     local list="$1"
     local type="$2"
     local item
-    local -a _code_notify_types=()
+    local -a _agent_notify_types=()
 
     if [[ -z "$list" ]]; then
         printf '%s\n' "$type"
         return 0
     fi
 
-    IFS='|' read -r -a _code_notify_types <<< "$list"
-    for item in "${_code_notify_types[@]}"; do
+    IFS='|' read -r -a _agent_notify_types <<< "$list"
+    for item in "${_agent_notify_types[@]}"; do
         if [[ "$item" == "$type" ]]; then
             printf '%s\n' "$list"
             return 0
@@ -1514,10 +1514,10 @@ append_unique_notify_type() {
 normalize_notify_types() {
     local raw="$1"
     local result="" item canonical
-    local -a _code_notify_raw_types=()
+    local -a _agent_notify_raw_types=()
 
-    IFS='|' read -r -a _code_notify_raw_types <<< "$raw"
-    for item in "${_code_notify_raw_types[@]}"; do
+    IFS='|' read -r -a _agent_notify_raw_types <<< "$raw"
+    for item in "${_agent_notify_raw_types[@]}"; do
         canonical="$(normalize_alert_type "$item" 2>/dev/null || true)"
         [[ -n "$canonical" ]] || continue
         result="$(append_unique_notify_type "$result" "$canonical")"
@@ -1556,10 +1556,10 @@ remove_notify_type() {
     type="$(normalize_alert_type "$1")" || return 1
     local current=$(get_notify_types)
     local new_types="" item
-    local -a _code_notify_types=()
+    local -a _agent_notify_types=()
 
-    IFS='|' read -r -a _code_notify_types <<< "$current"
-    for item in "${_code_notify_types[@]}"; do
+    IFS='|' read -r -a _agent_notify_types <<< "$current"
+    for item in "${_agent_notify_types[@]}"; do
         [[ "$item" != "$type" ]] || continue
         new_types="$(append_unique_notify_type "$new_types" "$item")"
     done
@@ -1577,10 +1577,10 @@ is_notify_type_enabled() {
     type="$(normalize_alert_type "$1" 2>/dev/null || true)"
     [[ -n "$type" ]] || return 1
     local current=$(get_notify_types)
-    local -a _code_notify_types=()
+    local -a _agent_notify_types=()
 
-    IFS='|' read -r -a _code_notify_types <<< "$current"
-    for item in "${_code_notify_types[@]}"; do
+    IFS='|' read -r -a _agent_notify_types <<< "$current"
+    for item in "${_agent_notify_types[@]}"; do
         [[ "$item" == "$type" ]] && return 0
     done
 
@@ -1600,10 +1600,10 @@ get_notify_matcher() {
 get_notification_alert_types() {
     local current result="" item
     current="$(get_notify_types)"
-    local -a _code_notify_types=()
+    local -a _agent_notify_types=()
 
-    IFS='|' read -r -a _code_notify_types <<< "$current"
-    for item in "${_code_notify_types[@]}"; do
+    IFS='|' read -r -a _agent_notify_types <<< "$current"
+    for item in "${_agent_notify_types[@]}"; do
         if is_notification_alert_type "$item"; then
             result="$(append_unique_notify_type "$result" "$item")"
         fi
@@ -1615,10 +1615,10 @@ get_notification_alert_types() {
 get_claude_event_alert_types() {
     local current result="" item
     current="$(get_notify_types)"
-    local -a _code_notify_types=()
+    local -a _agent_notify_types=()
 
-    IFS='|' read -r -a _code_notify_types <<< "$current"
-    for item in "${_code_notify_types[@]}"; do
+    IFS='|' read -r -a _agent_notify_types <<< "$current"
+    for item in "${_agent_notify_types[@]}"; do
         if is_claude_event_alert_type "$item"; then
             result="$(append_unique_notify_type "$result" "$item")"
         fi

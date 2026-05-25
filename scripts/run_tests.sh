@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Simple test suite for Code-Notify
+# Simple test suite for Agent-Notify
 
 set -e
 
@@ -33,19 +33,19 @@ test_fail() {
 
 # Change to project root
 cd "$(dirname "$0")/.."
-CURRENT_VERSION="$(awk -F'"' '/^VERSION=/{print $2}' bin/code-notify)"
+CURRENT_VERSION="$(awk -F'"' '/^VERSION=/{print $2}' bin/agent-notify)"
 
 # Test 1: Main executable exists and is executable
 test_start "main executable exists"
-if [[ -x "bin/code-notify" ]]; then
+if [[ -x "bin/agent-notify" ]]; then
     test_pass
 else
-    test_fail "bin/code-notify not found or not executable"
+    test_fail "bin/agent-notify not found or not executable"
 fi
 
 # Test 2: Can show version
 test_start "version command"
-if ./bin/code-notify version 2>&1 | grep -q "version"; then
+if ./bin/agent-notify version 2>&1 | grep -q "version"; then
     test_pass
 else
     test_fail "version command failed"
@@ -53,7 +53,7 @@ fi
 
 # Test 3: Can show help
 test_start "help command"
-if ./bin/code-notify help 2>&1 | grep -q "USAGE"; then
+if ./bin/agent-notify help 2>&1 | grep -q "USAGE"; then
     test_pass
 else
     test_fail "help command failed"
@@ -61,9 +61,9 @@ fi
 
 # Test 4: Library files exist
 test_start "library files"
-if [[ -f "lib/code-notify/utils/colors.sh" ]] && \
-   [[ -f "lib/code-notify/utils/detect.sh" ]] && \
-   [[ -f "lib/code-notify/core/config.sh" ]]; then
+if [[ -f "lib/agent-notify/utils/colors.sh" ]] && \
+   [[ -f "lib/agent-notify/utils/detect.sh" ]] && \
+   [[ -f "lib/agent-notify/core/config.sh" ]]; then
     test_pass
 else
     test_fail "missing library files"
@@ -71,7 +71,7 @@ fi
 
 # Test 5: Command routing (an alias simulation)
 test_start "an command routing"
-if CN_TEST=1 ./bin/code-notify help 2>&1 | grep -q "Code-Notify"; then
+if CN_TEST=1 ./bin/agent-notify help 2>&1 | grep -q "Agent-Notify"; then
     test_pass
 else
     test_fail "command routing failed"
@@ -80,7 +80,7 @@ fi
 # Test 6: Check syntax of all shell scripts
 test_start "shell script syntax"
 SYNTAX_ERROR=0
-for script in bin/code-notify lib/code-notify/**/*.sh; do
+for script in bin/agent-notify lib/agent-notify/**/*.sh; do
     if [[ -f "$script" ]]; then
         if ! bash -n "$script" 2>/dev/null; then
             SYNTAX_ERROR=1
@@ -96,7 +96,7 @@ fi
 
 # Test 7: update command is exposed in help
 test_start "update command in help"
-if ./bin/code-notify help 2>&1 | grep -q "update"; then
+if ./bin/agent-notify help 2>&1 | grep -q "update"; then
     test_pass
 else
     test_fail "update command missing from help"
@@ -104,7 +104,7 @@ fi
 
 # Test 8: update check command works
 test_start "update check command"
-if CODE_NOTIFY_INSTALL_METHOD=script CODE_NOTIFY_LATEST_VERSION="$CURRENT_VERSION" ./bin/code-notify update check 2>&1 | grep -q "Code-Notify is up to date"; then
+if AGENT_NOTIFY_INSTALL_METHOD=script AGENT_NOTIFY_LATEST_VERSION="$CURRENT_VERSION" ./bin/agent-notify update check 2>&1 | grep -q "Agent-Notify is up to date"; then
     test_pass
 else
     test_fail "update check command failed"
@@ -112,7 +112,7 @@ fi
 
 # Test 9: update command skips reinstalling current versions
 test_start "no-op update command"
-if CODE_NOTIFY_INSTALL_METHOD=script CODE_NOTIFY_LATEST_VERSION="$CURRENT_VERSION" ./bin/code-notify update 2>&1 | grep -q "Code-Notify is up to date"; then
+if AGENT_NOTIFY_INSTALL_METHOD=script AGENT_NOTIFY_LATEST_VERSION="$CURRENT_VERSION" ./bin/agent-notify update 2>&1 | grep -q "Agent-Notify is up to date"; then
     test_pass
 else
     test_fail "update command did not skip reinstalling the current version"
@@ -136,7 +136,7 @@ fi
 
 # Test 12: npm launchers can route to the shell runtime
 test_start "npm launcher routing"
-if node ./bin/npm-an.js version 2>&1 | grep -q "code-notify version"; then
+if node ./bin/npm-an.js version 2>&1 | grep -q "agent-notify version"; then
     test_pass
 else
     test_fail "npm launcher version command failed"

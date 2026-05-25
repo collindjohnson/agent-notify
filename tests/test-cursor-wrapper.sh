@@ -42,9 +42,9 @@ export CURSOR_TEST_LOG="$test_dir/cursor.log"
 export CURSOR_NOTIFY_TEST_LOG="$notify_log"
 export CURSOR_NOTIFY_PROJECT="demo"
 
-source "$SCRIPT_DIR/../lib/code-notify/utils/colors.sh"
-source "$SCRIPT_DIR/../lib/code-notify/utils/detect.sh"
-source "$SCRIPT_DIR/../lib/code-notify/core/config.sh"
+source "$SCRIPT_DIR/../lib/agent-notify/utils/colors.sh"
+source "$SCRIPT_DIR/../lib/agent-notify/utils/detect.sh"
+source "$SCRIPT_DIR/../lib/agent-notify/core/config.sh"
 
 get_notify_script() {
     printf '%s\n' "$test_dir/notifier.sh"

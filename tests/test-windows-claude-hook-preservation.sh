@@ -20,7 +20,7 @@ cat > "$ps_script" <<'EOF'
 param([string]$InstallerPath)
 
 $ErrorActionPreference = "Stop"
-$testRoot = Join-Path ([System.IO.Path]::GetTempPath()) ("code-notify-win-" + [guid]::NewGuid().ToString())
+$testRoot = Join-Path ([System.IO.Path]::GetTempPath()) ("agent-notify-win-" + [guid]::NewGuid().ToString())
 
 try {
     New-Item -ItemType Directory -Path $testRoot -Force | Out-Null
@@ -28,7 +28,7 @@ try {
 
     $content = Get-Content -Raw $InstallerPath
     if ($content -notmatch "(?ms)\$mainScript = @'\r?\n(?<module>.*?)\r?\n'@") {
-        throw "could not extract Code-Notify PowerShell module from installer"
+        throw "could not extract Agent-Notify PowerShell module from installer"
     }
     $moduleScript = $Matches['module']
     $moduleScript = $moduleScript -replace '(?ms)\r?\nExport-ModuleMember -Function @\(.*?\)\s*$', ''
@@ -80,7 +80,7 @@ try {
 '@ | Set-Content $script:SettingsFile -Encoding UTF8
 
     if (Test-NotificationsEnabled -Tool "claude") {
-        throw "custom Claude hooks were incorrectly treated as current code-notify hooks"
+        throw "custom Claude hooks were incorrectly treated as current agent-notify hooks"
     }
 
     Enable-Notifications -Tool "claude"

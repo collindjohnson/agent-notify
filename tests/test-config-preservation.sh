@@ -28,8 +28,8 @@ run_test_with_tool() {
 
     # Source config functions in subshell to avoid polluting
     (
-        source "$SCRIPT_DIR/../lib/code-notify/core/config.sh"
-        source "$SCRIPT_DIR/../lib/code-notify/utils/colors.sh"
+        source "$SCRIPT_DIR/../lib/agent-notify/core/config.sh"
+        source "$SCRIPT_DIR/../lib/agent-notify/utils/colors.sh"
 
         # Mock has_jq based on tool
         if [[ "$tool" == "python" ]]; then
@@ -104,7 +104,7 @@ run_test_no_tools() {
     mkdir -p "$CLAUDE_HOME"
 
     (
-        source "$SCRIPT_DIR/../lib/code-notify/utils/colors.sh"
+        source "$SCRIPT_DIR/../lib/agent-notify/utils/colors.sh"
 
         GLOBAL_SETTINGS_FILE="$CLAUDE_HOME/settings.json"
 
@@ -118,7 +118,7 @@ run_test_no_tools() {
 
         # Source config.sh and then override the helper functions
         # This simulates a system without jq and python3
-        source "$SCRIPT_DIR/../lib/code-notify/core/config.sh"
+        source "$SCRIPT_DIR/../lib/agent-notify/core/config.sh"
 
         # Mock both helpers to simulate missing tools
         has_jq() { return 1; }
@@ -165,8 +165,8 @@ run_test_special_chars_path() {
     mkdir -p "$CLAUDE_HOME"
 
     (
-        source "$SCRIPT_DIR/../lib/code-notify/core/config.sh"
-        source "$SCRIPT_DIR/../lib/code-notify/utils/colors.sh"
+        source "$SCRIPT_DIR/../lib/agent-notify/core/config.sh"
+        source "$SCRIPT_DIR/../lib/agent-notify/utils/colors.sh"
 
         # Mock has_jq based on tool
         if [[ "$tool" == "python" ]]; then
@@ -226,8 +226,8 @@ run_test_invalid_json() {
     mkdir -p "$CLAUDE_HOME"
 
     (
-        source "$SCRIPT_DIR/../lib/code-notify/core/config.sh"
-        source "$SCRIPT_DIR/../lib/code-notify/utils/colors.sh"
+        source "$SCRIPT_DIR/../lib/agent-notify/core/config.sh"
+        source "$SCRIPT_DIR/../lib/agent-notify/utils/colors.sh"
 
         # Mock has_jq based on tool
         if [[ "$tool" == "python" ]]; then
@@ -290,10 +290,10 @@ run_test_failure_propagation() {
     mkdir -p "$CLAUDE_HOME"
 
     (
-        source "$SCRIPT_DIR/../lib/code-notify/utils/colors.sh"
-        source "$SCRIPT_DIR/../lib/code-notify/utils/detect.sh"
-        source "$SCRIPT_DIR/../lib/code-notify/core/config.sh"
-        source "$SCRIPT_DIR/../lib/code-notify/commands/global.sh"
+        source "$SCRIPT_DIR/../lib/agent-notify/utils/colors.sh"
+        source "$SCRIPT_DIR/../lib/agent-notify/utils/detect.sh"
+        source "$SCRIPT_DIR/../lib/agent-notify/core/config.sh"
+        source "$SCRIPT_DIR/../lib/agent-notify/commands/global.sh"
 
         echo ""
         echo "=== Testing failure propagation ==="
@@ -365,10 +365,10 @@ run_test_claude_hook_detection_and_preservation() {
     mkdir -p "$CLAUDE_HOME"
 
     (
-        source "$SCRIPT_DIR/../lib/code-notify/utils/colors.sh"
-        source "$SCRIPT_DIR/../lib/code-notify/utils/detect.sh"
-        source "$SCRIPT_DIR/../lib/code-notify/core/config.sh"
-        source "$SCRIPT_DIR/../lib/code-notify/commands/global.sh"
+        source "$SCRIPT_DIR/../lib/agent-notify/utils/colors.sh"
+        source "$SCRIPT_DIR/../lib/agent-notify/utils/detect.sh"
+        source "$SCRIPT_DIR/../lib/agent-notify/core/config.sh"
+        source "$SCRIPT_DIR/../lib/agent-notify/commands/global.sh"
 
         if [[ "$tool" == "python" ]]; then
             has_jq() { return 1; }
@@ -410,7 +410,7 @@ EOF
         echo "=== Testing Claude hook detection with $tool ==="
 
         if is_enabled_globally; then
-            echo "❌ $tool: unrelated/custom hooks were incorrectly treated as code-notify hooks"
+            echo "❌ $tool: unrelated/custom hooks were incorrectly treated as agent-notify hooks"
             cat "$GLOBAL_SETTINGS_FILE"
             exit 1
         fi
@@ -442,13 +442,13 @@ EOF
         }
 
         grep -q '"matcher": "idle_prompt"' "$GLOBAL_SETTINGS_FILE" || {
-            echo "❌ $tool: code-notify Notification hook was not added"
+            echo "❌ $tool: agent-notify Notification hook was not added"
             cat "$GLOBAL_SETTINGS_FILE"
             exit 1
         }
 
         grep -qF "\"command\": \"$(get_global_claude_stop_command)\"" "$GLOBAL_SETTINGS_FILE" || {
-            echo "❌ $tool: code-notify Stop hook was not added"
+            echo "❌ $tool: agent-notify Stop hook was not added"
             cat "$GLOBAL_SETTINGS_FILE"
             exit 1
         }
@@ -474,13 +474,13 @@ EOF
         }
 
         if grep -qF "\"command\": \"$(get_global_claude_notify_command)\"" "$GLOBAL_SETTINGS_FILE"; then
-            echo "❌ $tool: code-notify Notification hook was not removed during disable"
+            echo "❌ $tool: agent-notify Notification hook was not removed during disable"
             cat "$GLOBAL_SETTINGS_FILE"
             exit 1
         fi
 
         if grep -qF "\"command\": \"$(get_global_claude_stop_command)\"" "$GLOBAL_SETTINGS_FILE"; then
-            echo "❌ $tool: code-notify Stop hook was not removed during disable"
+            echo "❌ $tool: agent-notify Stop hook was not removed during disable"
             cat "$GLOBAL_SETTINGS_FILE"
             exit 1
         fi
@@ -503,8 +503,8 @@ run_test_project_hooks_special_chars() {
     mkdir -p "$CLAUDE_HOME"
 
     (
-        source "$SCRIPT_DIR/../lib/code-notify/core/config.sh"
-        source "$SCRIPT_DIR/../lib/code-notify/utils/colors.sh"
+        source "$SCRIPT_DIR/../lib/agent-notify/core/config.sh"
+        source "$SCRIPT_DIR/../lib/agent-notify/utils/colors.sh"
 
         # Mock has_jq based on tool
         if [[ "$tool" == "python" ]]; then
@@ -611,7 +611,7 @@ run_test_codex_toml_placement() {
     mkdir -p "$CODEX_HOME"
 
     (
-        source "$SCRIPT_DIR/../lib/code-notify/core/config.sh"
+        source "$SCRIPT_DIR/../lib/agent-notify/core/config.sh"
 
         echo ""
         echo "=== Testing Codex TOML placement ==="
@@ -675,8 +675,8 @@ PY
             exit 1
         fi
 
-        if grep -qE '^notify\s*=' "$CODEX_CONFIG_FILE" || grep -q '^# Code-Notify: Desktop notifications' "$CODEX_CONFIG_FILE"; then
-            echo "❌ disable_codex_hooks did not remove Code-Notify lines"
+        if grep -qE '^notify\s*=' "$CODEX_CONFIG_FILE" || grep -q '^# Agent-Notify: Desktop notifications' "$CODEX_CONFIG_FILE"; then
+            echo "❌ disable_codex_hooks did not remove Agent-Notify lines"
             cat "$CODEX_CONFIG_FILE"
             exit 1
         fi
@@ -692,7 +692,7 @@ PY
 [features]
 multi_agent = true
 
-# Code-Notify: Desktop notifications
+# Agent-Notify: Desktop notifications
 notify = ["/tmp/notifier", "codex"]
 EOF
 
@@ -736,10 +736,10 @@ run_test_legacy_claude_hooks_repair() {
     mkdir -p "$CLAUDE_HOME"
 
     (
-        source "$SCRIPT_DIR/../lib/code-notify/utils/colors.sh"
-        source "$SCRIPT_DIR/../lib/code-notify/utils/detect.sh"
-        source "$SCRIPT_DIR/../lib/code-notify/core/config.sh"
-        source "$SCRIPT_DIR/../lib/code-notify/commands/global.sh"
+        source "$SCRIPT_DIR/../lib/agent-notify/utils/colors.sh"
+        source "$SCRIPT_DIR/../lib/agent-notify/utils/detect.sh"
+        source "$SCRIPT_DIR/../lib/agent-notify/core/config.sh"
+        source "$SCRIPT_DIR/../lib/agent-notify/commands/global.sh"
 
         is_tool_installed() { return 0; }
 
@@ -783,8 +783,8 @@ EOF
         echo "✅ Legacy Claude hooks are detected as stale"
 
         local output
-        output=$("$SCRIPT_DIR/../bin/code-notify" repair-hooks 2>&1) || {
-            echo "❌ code-notify repair-hooks failed while repairing legacy Claude hooks"
+        output=$("$SCRIPT_DIR/../bin/agent-notify" repair-hooks 2>&1) || {
+            echo "❌ agent-notify repair-hooks failed while repairing legacy Claude hooks"
             echo "$output"
             exit 1
         }
@@ -801,14 +801,14 @@ EOF
             exit 1
         }
 
-        if ! grep -qE 'code-notify/.*/notifier\.sh notification claude' "$GLOBAL_SETTINGS_FILE"; then
-            echo "❌ Repaired Claude config did not update the notification command to code-notify"
+        if ! grep -qE 'agent-notify/.*/notifier\.sh notification claude' "$GLOBAL_SETTINGS_FILE"; then
+            echo "❌ Repaired Claude config did not update the notification command to agent-notify"
             cat "$GLOBAL_SETTINGS_FILE"
             exit 1
         fi
 
-        if ! grep -qE 'code-notify/.*/notifier\.sh stop claude' "$GLOBAL_SETTINGS_FILE"; then
-            echo "❌ Repaired Claude config did not update the stop command to code-notify"
+        if ! grep -qE 'agent-notify/.*/notifier\.sh stop claude' "$GLOBAL_SETTINGS_FILE"; then
+            echo "❌ Repaired Claude config did not update the stop command to agent-notify"
             cat "$GLOBAL_SETTINGS_FILE"
             exit 1
         fi
@@ -825,7 +825,7 @@ EOF
             exit 1
         fi
 
-        echo "✅ Legacy Claude hooks are repaired to the current code-notify config"
+        echo "✅ Legacy Claude hooks are repaired to the current agent-notify config"
     )
 
     (
@@ -834,10 +834,10 @@ EOF
         rm -f "$HOME/.claude/settings.json" "$HOME/.claude/hooks.json"
         printf '{}\n' > "$HOME/.config/.claude/settings.json"
 
-        source "$SCRIPT_DIR/../lib/code-notify/utils/colors.sh"
-        source "$SCRIPT_DIR/../lib/code-notify/utils/detect.sh"
-        source "$SCRIPT_DIR/../lib/code-notify/core/config.sh"
-        source "$SCRIPT_DIR/../lib/code-notify/commands/global.sh"
+        source "$SCRIPT_DIR/../lib/agent-notify/utils/colors.sh"
+        source "$SCRIPT_DIR/../lib/agent-notify/utils/detect.sh"
+        source "$SCRIPT_DIR/../lib/agent-notify/core/config.sh"
+        source "$SCRIPT_DIR/../lib/agent-notify/commands/global.sh"
 
         is_tool_installed() { return 0; }
 
@@ -887,8 +887,8 @@ EOF
         echo "✅ Alternate-path Claude hooks are detected as stale"
 
         local output
-        output=$("$SCRIPT_DIR/../bin/code-notify" repair-hooks 2>&1) || {
-            echo "❌ code-notify repair-hooks failed for alternate Claude settings path"
+        output=$("$SCRIPT_DIR/../bin/agent-notify" repair-hooks 2>&1) || {
+            echo "❌ agent-notify repair-hooks failed for alternate Claude settings path"
             echo "$output"
             exit 1
         }
@@ -911,7 +911,7 @@ EOF
             exit 1
         fi
 
-        echo "✅ Alternate Claude settings path is repaired to the current code-notify config"
+        echo "✅ Alternate Claude settings path is repaired to the current agent-notify config"
     )
 
     return $?

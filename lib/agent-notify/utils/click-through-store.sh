@@ -1,6 +1,6 @@
 #!/bin/bash
 
-CLICK_THROUGH_CONFIG="${CODE_NOTIFY_HOME:-$HOME/.code-notify}/click-through.conf"
+CLICK_THROUGH_CONFIG="${AGENT_NOTIFY_HOME:-$HOME/.agent-notify}/click-through.conf"
 
 click_through_each_builtin_entry() {
     cat <<'EOF'
@@ -96,7 +96,7 @@ click_through_write_entries() {
     mkdir -p "$(dirname "$CLICK_THROUGH_CONFIG")"
 
     {
-        echo "# Code-Notify click-through configuration"
+        echo "# Agent-Notify click-through configuration"
         echo "# Maps TERM_PROGRAM values to macOS bundle IDs"
         echo ""
         if [[ -n "$entries" ]]; then

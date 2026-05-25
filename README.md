@@ -1,10 +1,10 @@
-# Code-Notify
+# Agent-Notify
 
-> **Official downloads**: https://github.com/mylee04/code-notify/releases
+> **Official downloads**: https://github.com/collindjohnson/agent-notify/releases
 >
-> **Homebrew**: `brew install mylee04/tools/code-notify`
+> **Homebrew**: `brew install collindjohnson/tools/agent-notify`
 >
-> **npm**: `npm install -g code-notify`
+> **npm**: `npm install -g agent-notify`
 
 Desktop notifications for AI coding tools - get alerts when tasks complete or input is needed.
 
@@ -13,7 +13,7 @@ Desktop notifications for AI coding tools - get alerts when tasks complete or in
   <img src="assets/multi-tools-support-02.png" width="48%" alt="All tools enabled"/>
 </p>
 
-[![Version](https://img.shields.io/badge/version-1.7.4-blue.svg)](https://github.com/mylee04/code-notify/releases)
+[![Version](https://img.shields.io/badge/version-1.7.4-blue.svg)](https://github.com/collindjohnson/agent-notify/releases)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![macOS](https://img.shields.io/badge/macOS-supported-green.svg)](https://www.apple.com/macos)
 [![Linux](https://img.shields.io/badge/Linux-supported-green.svg)](https://www.linux.org/)
@@ -24,8 +24,8 @@ Desktop notifications for AI coding tools - get alerts when tasks complete or in
 ## What's New in v1.7.4
 
 - **Claude agent/team event alerts**: `an alerts` can now opt into `SubagentStop`, `TeammateIdle`, `TaskCompleted`, and related Claude hook events
-- **Less noisy subagent workflows**: Claude event hooks get their own rate-limit bucket via `CODE_NOTIFY_EVENT_RATE_LIMIT_SECONDS`
-- **npm package metadata fixed**: npm global install now keeps the `an`, `anp`, and `code-notify` binaries when published
+- **Less noisy subagent workflows**: Claude event hooks get their own rate-limit bucket via `AGENT_NOTIFY_EVENT_RATE_LIMIT_SECONDS`
+- **npm package metadata fixed**: npm global install now keeps the `an`, `anp`, and `agent-notify` binaries when published
 
 ---
 
@@ -49,8 +49,8 @@ Desktop notifications for AI coding tools - get alerts when tasks complete or in
 **macOS (Homebrew)**
 
 ```bash
-brew tap mylee04/tools
-brew install code-notify
+brew tap collindjohnson/tools
+brew install agent-notify
 an on
 ```
 
@@ -58,7 +58,7 @@ an on
 
 ```bash
 an update
-code-notify version
+agent-notify version
 ```
 
 If you were using the older `claude-notify` hook layout, supported upgrades now repair those Claude hooks automatically. On Windows, that repair also covers older `notify.ps1` hook layouts and alternate Claude settings locations such as `%USERPROFILE%\.config\.claude\settings.json`. Existing unrelated Claude hooks are preserved during enable/disable operations.
@@ -66,20 +66,20 @@ If you were using the older `claude-notify` hook layout, supported upgrades now 
 **Linux / WSL**
 
 ```bash
-curl -sSL https://raw.githubusercontent.com/mylee04/code-notify/main/scripts/install.sh | bash
+curl -sSL https://raw.githubusercontent.com/collindjohnson/agent-notify/main/scripts/install.sh | bash
 ```
 
 **npm (macOS / Linux / Windows)**
 
 ```bash
-npm install -g code-notify
+npm install -g agent-notify
 an on
 ```
 
 **Windows**
 
 ```powershell
-irm https://raw.githubusercontent.com/mylee04/code-notify/main/scripts/install-windows.ps1 | iex
+irm https://raw.githubusercontent.com/collindjohnson/agent-notify/main/scripts/install-windows.ps1 | iex
 ```
 
 ### For LLM Agents
@@ -87,14 +87,14 @@ irm https://raw.githubusercontent.com/mylee04/code-notify/main/scripts/install-w
 Paste this to your AI agent (Claude Code, Cursor, etc.):
 
 ```
-Install code-notify by following:
-https://raw.githubusercontent.com/mylee04/code-notify/main/docs/installation.md
+Install agent-notify by following:
+https://raw.githubusercontent.com/collindjohnson/agent-notify/main/docs/installation.md
 ```
 
 Or fetch directly:
 
 ```bash
-curl -s https://raw.githubusercontent.com/mylee04/code-notify/main/docs/installation.md
+curl -s https://raw.githubusercontent.com/collindjohnson/agent-notify/main/docs/installation.md
 ```
 
 ## Usage
@@ -113,7 +113,7 @@ curl -s https://raw.githubusercontent.com/mylee04/code-notify/main/docs/installa
 | `an off all`         | Explicit alias for disabling all tools       |
 | `an test`            | Send test notification                       |
 | `an status`          | Show current status                          |
-| `an update`          | Update code-notify                           |
+| `an update`          | Update agent-notify                           |
 | `an update check`    | Check the latest release and show the update command |
 | `an click-through`   | Show current macOS click-through mappings    |
 | `an click-through add <app>` | Add a macOS click-through mapping    |
@@ -124,23 +124,23 @@ curl -s https://raw.githubusercontent.com/mylee04/code-notify/main/docs/installa
 | `an voice on claude` | Enable voice for Claude only                 |
 | `anp on`             | Enable for current project only              |
 
-When enabling project notifications with `anp on`, Code-Notify warns if Claude project trust does not appear to be accepted yet.
+When enabling project notifications with `anp on`, Agent-Notify warns if Claude project trust does not appear to be accepted yet.
 Project-scoped Claude hooks override the global mute file, so `an off` will not suppress a project where `anp on` is enabled.
 `all` is also accepted as an explicit alias for global commands such as `an on all`, `an off all`, and `an status all`.
 
 ## How It Works
 
-Code-Notify uses the hook systems built into AI coding tools:
+Agent-Notify uses the hook systems built into AI coding tools:
 
 - **Claude Code**: `~/.claude/settings.json`
 - **Codex**: `~/.codex/config.toml`
 - **Gemini CLI**: `~/.gemini/settings.json`
 - **Cursor Agent**: `~/.local/bin/cursor-notify` wrapper
 
-For Codex, Code-Notify configures `notify = ["/absolute/path/to/notifier.sh", "codex"]` and reads the JSON payload Codex appends on completion.
+For Codex, Agent-Notify configures `notify = ["/absolute/path/to/notifier.sh", "codex"]` and reads the JSON payload Codex appends on completion.
 Codex currently exposes completion events through `notify`; approval and `request_permissions` prompts do not currently arrive through this hook.
 
-Cursor Agent does not currently expose a hook configuration file. `an on cursor` installs a `cursor-notify` wrapper that runs Cursor Agent and sends a Code-Notify completion or error notification when the process exits:
+Cursor Agent does not currently expose a hook configuration file. `an on cursor` installs a `cursor-notify` wrapper that runs Cursor Agent and sends a Agent-Notify completion or error notification when the process exits:
 
 ```sh
 cursor-notify "your prompt"
@@ -235,7 +235,7 @@ an test
 **Installed with npm?**
 
 ```bash
-an update     # Runs: npm install -g code-notify@latest
+an update     # Runs: npm install -g agent-notify@latest
 ```
 
 **Too many `last_notification_*` files in `~/.claude/notifications`?**
@@ -245,7 +245,7 @@ Generated rate-limit state files are stored under `~/.claude/notifications/state
 ## Project Structure
 
 ```
-code-notify/
+agent-notify/
 ├── bin/           # Main executable
 ├── lib/           # Library code
 ├── scripts/       # Install scripts
@@ -258,7 +258,7 @@ code-notify/
 - [Installation Guide](docs/installation.md)
 - [Hook Configuration](docs/HOOKS_GUIDE.md)
 - [Contributing](docs/CONTRIBUTING.md)
-- [GitHub Issues](https://github.com/mylee04/code-notify/issues)
+- [GitHub Issues](https://github.com/collindjohnson/agent-notify/issues)
 
 ## License
 

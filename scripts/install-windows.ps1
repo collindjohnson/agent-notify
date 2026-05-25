@@ -1,12 +1,12 @@
-# Code-Notify Installation Script for Windows
+# Agent-Notify Installation Script for Windows
 # Desktop notifications for Claude Code, Codex, and Gemini CLI
-# https://github.com/mylee04/code-notify
+# https://github.com/collindjohnson/agent-notify
 #
 # Usage:
 #   powershell -ExecutionPolicy Bypass -File install-windows.ps1
 #
 # Or run directly in PowerShell:
-#   irm https://raw.githubusercontent.com/mylee04/code-notify/main/scripts/install-windows.ps1 | iex
+#   irm https://raw.githubusercontent.com/collindjohnson/agent-notify/main/scripts/install-windows.ps1 | iex
 
 #Requires -Version 5.1
 
@@ -31,7 +31,7 @@ function Write-Header { param([string]$Message) Write-Host "`n$Message" -Foregro
 
 # Paths
 $ClaudeHome = "$env:USERPROFILE\.claude"
-$InstallDir = "$env:USERPROFILE\.code-notify"
+$InstallDir = "$env:USERPROFILE\.agent-notify"
 $NotificationsDir = "$ClaudeHome\notifications"
 $NotificationStateDir = "$NotificationsDir\state"
 $LogsDir = "$ClaudeHome\logs"
@@ -40,7 +40,7 @@ function Show-Banner {
     Write-Host @"
 
  ====================================
-   Code-Notify for Windows v$VERSION
+   Agent-Notify for Windows v$VERSION
  ====================================
 
 "@ -ForegroundColor Cyan
@@ -91,7 +91,7 @@ function Test-Prerequisites {
 }
 
 function Install-ClaudeNotify {
-    Write-Header "Installing Code-Notify..."
+    Write-Header "Installing Agent-Notify..."
 
     # Create directories
     $directories = @($InstallDir, "$InstallDir\bin", "$InstallDir\lib", $NotificationsDir, $NotificationStateDir, $LogsDir)
@@ -104,8 +104,8 @@ function Install-ClaudeNotify {
 
     # Create the main PowerShell module
     $mainScript = @'
-# Code-Notify PowerShell Module
-# https://github.com/mylee04/code-notify
+# Agent-Notify PowerShell Module
+# https://github.com/collindjohnson/agent-notify
 
 $script:VERSION = "1.7.4"
 $script:ClaudeHome = if ($env:CLAUDE_HOME) { $env:CLAUDE_HOME } else { "$env:USERPROFILE\.claude" }
@@ -149,7 +149,7 @@ function Backup-ConfigFile {
         return
     }
 
-    $backupDir = "$env:USERPROFILE\.config\code-notify\backups"
+    $backupDir = "$env:USERPROFILE\.config\agent-notify\backups"
     if (-not (Test-Path $backupDir)) {
         New-Item -ItemType Directory -Path $backupDir -Force | Out-Null
     }
@@ -182,7 +182,7 @@ function Set-CodexNotifyConfig {
         [string]$NotifyLine
     )
 
-    $commentLine = "# Code-Notify: Desktop notifications"
+    $commentLine = "# Agent-Notify: Desktop notifications"
 
     if (Test-Path $Path) {
         $content = Get-Content $Path -Raw
@@ -191,7 +191,7 @@ function Set-CodexNotifyConfig {
     }
 
     $content = (($content -split "`r?`n") | Where-Object {
-        $_ -notmatch '^\s*# Code-Notify: Desktop notifications\s*$' -and $_ -notmatch '^\s*notify\s*='
+        $_ -notmatch '^\s*# Agent-Notify: Desktop notifications\s*$' -and $_ -notmatch '^\s*notify\s*='
     }) -join "`n"
     $content = $content.TrimEnd()
 
@@ -247,8 +247,8 @@ function Get-ProjectRoot {
 }
 
 function Get-ClaudeTrustFile {
-    if ($env:CODE_NOTIFY_CLAUDE_TRUST_FILE) {
-        return $env:CODE_NOTIFY_CLAUDE_TRUST_FILE
+    if ($env:AGENT_NOTIFY_CLAUDE_TRUST_FILE) {
+        return $env:AGENT_NOTIFY_CLAUDE_TRUST_FILE
     }
 
     return "$env:USERPROFILE\.claude.json"
@@ -338,7 +338,7 @@ function Send-Notification {
         $xml = New-Object Windows.Data.Xml.Dom.XmlDocument
         $xml.LoadXml($template)
         $toast = New-Object Windows.UI.Notifications.ToastNotification $xml
-        [Windows.UI.Notifications.ToastNotificationManager]::CreateToastNotifier("Code-Notify").Show($toast)
+        [Windows.UI.Notifications.ToastNotificationManager]::CreateToastNotifier("Agent-Notify").Show($toast)
     }
     catch {
         # Final fallback - balloon notification
@@ -545,11 +545,11 @@ function Get-ClaudeStopCommand {
 }
 
 function Get-ManagedClaudeNotificationPattern {
-    return '(claude-notify|code-notify.*notifier\.sh|(?:^|[\\/])notify\.(?:ps1|sh)).*(notification|PreToolUse)(?:\s|$)'
+    return '(claude-notify|agent-notify.*notifier\.sh|(?:^|[\\/])notify\.(?:ps1|sh)).*(notification|PreToolUse)(?:\s|$)'
 }
 
 function Get-ManagedClaudeStopPattern {
-    return '(claude-notify|code-notify.*notifier\.sh|(?:^|[\\/])notify\.(?:ps1|sh)).*stop(?:\s|$)'
+    return '(claude-notify|agent-notify.*notifier\.sh|(?:^|[\\/])notify\.(?:ps1|sh)).*stop(?:\s|$)'
 }
 
 function Test-HookEntriesContainCommand {
@@ -866,7 +866,7 @@ function Enable-Notifications {
             Set-CodexNotifyConfig -Path $script:CodexConfigFile -NotifyLine $notifyLine
             Write-Success "Codex notifications enabled!"
             Write-Info "Config: $script:CodexConfigFile"
-            Send-Notification -Title "Code-Notify" -Message "Codex notifications enabled!" -Type "success"
+            Send-Notification -Title "Agent-Notify" -Message "Codex notifications enabled!" -Type "success"
             return
         }
         "gemini" {
@@ -895,7 +895,7 @@ function Enable-Notifications {
                     matcher = ""
                     hooks = @(
                         @{
-                            name = "code-notify-notification"
+                            name = "agent-notify-notification"
                             type = "command"
                             command = "powershell -ExecutionPolicy Bypass -File `"$notifyScript`" notification gemini"
                             description = "Desktop notification when input needed"
@@ -908,7 +908,7 @@ function Enable-Notifications {
                     matcher = ""
                     hooks = @(
                         @{
-                            name = "code-notify-complete"
+                            name = "agent-notify-complete"
                             type = "command"
                             command = "powershell -ExecutionPolicy Bypass -File `"$notifyScript`" stop gemini"
                             description = "Desktop notification when task complete"
@@ -920,7 +920,7 @@ function Enable-Notifications {
             $settings | ConvertTo-Json -Depth 10 | Set-Content $script:GeminiSettingsFile -Encoding UTF8
             Write-Success "Gemini notifications enabled!"
             Write-Info "Config: $script:GeminiSettingsFile"
-            Send-Notification -Title "Code-Notify" -Message "Gemini notifications enabled!" -Type "success"
+            Send-Notification -Title "Agent-Notify" -Message "Gemini notifications enabled!" -Type "success"
             return
         }
         default {
@@ -965,7 +965,7 @@ function Enable-Notifications {
             if ($Project) {
                 Write-ClaudeProjectTrustWarning -ProjectRoot $projectRoot
             }
-            Send-Notification -Title "Code-Notify" -Message "$toolDisplay notifications enabled!" -Type "success"
+            Send-Notification -Title "Agent-Notify" -Message "$toolDisplay notifications enabled!" -Type "success"
         }
     }
 }
@@ -993,7 +993,7 @@ function Disable-Notifications {
 
             Backup-ConfigFile $script:CodexConfigFile
             $content = @(Get-Content $script:CodexConfigFile | Where-Object {
-                $_ -notmatch '^\s*# Code-Notify: Desktop notifications' -and $_ -notmatch '^\s*notify\s*='
+                $_ -notmatch '^\s*# Agent-Notify: Desktop notifications' -and $_ -notmatch '^\s*notify\s*='
             })
             $content | Set-Content $script:CodexConfigFile -Encoding UTF8
             Write-Success "Codex notifications disabled!"
@@ -1057,7 +1057,7 @@ function Show-Status {
         [string]$Tool = ""
     )
 
-    Write-Host "`n[i] Code-Notify Status" -ForegroundColor Cyan
+    Write-Host "`n[i] Agent-Notify Status" -ForegroundColor Cyan
     Write-Host "========================`n" -ForegroundColor Cyan
 
     if ($Project) {
@@ -1138,7 +1138,7 @@ function Show-Status {
         Write-Host "[!] BurntToast: Not installed (using native notifications)" -ForegroundColor Yellow
     }
 
-    Write-Host "`ncode-notify version $script:VERSION" -ForegroundColor DarkGray
+    Write-Host "`nagent-notify version $script:VERSION" -ForegroundColor DarkGray
 }
 
 function Enable-Voice {
@@ -1208,7 +1208,7 @@ function Send-TestNotification {
     Write-Host "`n[*] Testing Notifications" -ForegroundColor Cyan
     Write-Host "=========================`n" -ForegroundColor Cyan
 
-    Send-Notification -Title "Code-Notify Test" -Message "Notifications are working!" -Type "success"
+    Send-Notification -Title "Agent-Notify Test" -Message "Notifications are working!" -Type "success"
     Write-Success "Test notification sent!"
 
     if (Test-Path $script:VoiceFile) {
@@ -1217,8 +1217,8 @@ function Send-TestNotification {
 }
 
 function Get-InstallMethod {
-    if ($env:CODE_NOTIFY_INSTALL_METHOD) {
-        return $env:CODE_NOTIFY_INSTALL_METHOD.Trim().ToLowerInvariant()
+    if ($env:AGENT_NOTIFY_INSTALL_METHOD) {
+        return $env:AGENT_NOTIFY_INSTALL_METHOD.Trim().ToLowerInvariant()
     }
 
     return "script"
@@ -1227,10 +1227,10 @@ function Get-InstallMethod {
 function Get-UpdateCommand {
     switch (Get-InstallMethod) {
         "npm" {
-            return "npm install -g code-notify@latest"
+            return "npm install -g agent-notify@latest"
         }
         default {
-            return "irm https://raw.githubusercontent.com/mylee04/code-notify/main/scripts/install-windows.ps1 | iex"
+            return "irm https://raw.githubusercontent.com/collindjohnson/agent-notify/main/scripts/install-windows.ps1 | iex"
         }
     }
 }
@@ -1294,12 +1294,12 @@ function Compare-Version {
 }
 
 function Get-LatestReleaseVersion {
-    if ($env:CODE_NOTIFY_LATEST_VERSION) {
-        return Normalize-Version $env:CODE_NOTIFY_LATEST_VERSION
+    if ($env:AGENT_NOTIFY_LATEST_VERSION) {
+        return Normalize-Version $env:AGENT_NOTIFY_LATEST_VERSION
     }
 
     try {
-        $release = Invoke-RestMethod -Uri "https://api.github.com/repos/mylee04/code-notify/releases/latest" -Headers @{ "User-Agent" = "code-notify" }
+        $release = Invoke-RestMethod -Uri "https://api.github.com/repos/collindjohnson/agent-notify/releases/latest" -Headers @{ "User-Agent" = "agent-notify" }
         if ($release.tag_name) {
             return Normalize-Version $release.tag_name
         }
@@ -1349,7 +1349,7 @@ function Write-UpdateStatus {
         }
         0 {
             Write-Output "[i] Current version: $($Status.CurrentVersion)"
-            Write-Output "[OK] Code-Notify is up to date ($($Status.CurrentVersion))"
+            Write-Output "[OK] Agent-Notify is up to date ($($Status.CurrentVersion))"
         }
         1 {
             Write-Output "[i] Current version: $($Status.CurrentVersion)"
@@ -1358,7 +1358,7 @@ function Write-UpdateStatus {
     }
 }
 
-function Update-CodeNotify {
+function Update-AgentNotify {
     param(
         [switch]$Check
     )
@@ -1371,7 +1371,7 @@ function Update-CodeNotify {
         Write-Output ""
         Write-Output "[i] Checking for updates..."
         Write-UpdateStatus -Status $updateStatus
-        Write-Output "To update code-notify, run:"
+        Write-Output "To update agent-notify, run:"
         Write-Output "  $updateCommand"
         return
     }
@@ -1392,8 +1392,8 @@ function Update-CodeNotify {
         }
     }
 
-    Write-Host "`n[>] Updating Code-Notify" -ForegroundColor Cyan
-    $tempScript = Join-Path $env:TEMP "code-notify-update.ps1"
+    Write-Host "`n[>] Updating Agent-Notify" -ForegroundColor Cyan
+    $tempScript = Join-Path $env:TEMP "agent-notify-update.ps1"
 
     try {
         if (-not $updateStatus.LatestVersion) {
@@ -1407,21 +1407,21 @@ function Update-CodeNotify {
         switch ($installMethod) {
             "npm" {
                 $null = Get-Command npm -ErrorAction Stop
-                & npm install -g code-notify@latest
+                & npm install -g agent-notify@latest
                 if ($LASTEXITCODE -ne 0) {
                     throw "npm install failed with exit code $LASTEXITCODE"
                 }
             }
             default {
-                Invoke-WebRequest -UseBasicParsing -Uri "https://raw.githubusercontent.com/mylee04/code-notify/main/scripts/install-windows.ps1" -OutFile $tempScript
+                Invoke-WebRequest -UseBasicParsing -Uri "https://raw.githubusercontent.com/collindjohnson/agent-notify/main/scripts/install-windows.ps1" -OutFile $tempScript
                 & $tempScript -Silent -Force
             }
         }
         Write-Success "Update complete!"
-        Write-Info "Run 'code-notify version' in a new shell to confirm the installed version"
+        Write-Info "Run 'agent-notify version' in a new shell to confirm the installed version"
     }
     catch {
-        Write-Host "[X] Failed to update code-notify: $($_.Exception.Message)" -ForegroundColor Red
+        Write-Host "[X] Failed to update agent-notify: $($_.Exception.Message)" -ForegroundColor Red
         throw
     }
     finally {
@@ -1432,10 +1432,10 @@ function Update-CodeNotify {
 function Show-Help {
     Write-Host @"
 
-Code-Notify - Native Windows notifications for Claude Code, Codex, and Gemini CLI
+Agent-Notify - Native Windows notifications for Claude Code, Codex, and Gemini CLI
 
 USAGE:
-    code-notify <command> [options]
+    agent-notify <command> [options]
     an <command>              # Short alias
     anp <command>             # Project command alias
 
@@ -1444,7 +1444,7 @@ COMMANDS:
     off [tool|all]  Disable notifications globally or for a specific tool
     status [tool|all] Show notification status
     test            Send a test notification
-    update [check]  Update code-notify or check the latest release
+    update [check]  Update agent-notify or check the latest release
     voice on        Enable voice notifications
     voice off       Disable voice notifications
     help            Show this help message
@@ -1471,7 +1471,7 @@ PROJECT COMMANDS:
     project voice   Set project-specific voice (or: anp voice)
 
 EXAMPLES:
-    code-notify on            # Enable Claude notifications
+    agent-notify on            # Enable Claude notifications
     an on all                 # Enable all detected tools
     an on codex               # Enable Codex notifications
     an off all                # Disable all tools
@@ -1483,13 +1483,13 @@ EXAMPLES:
     an sound set C:\sounds\ding.wav  # Use custom sound
 
 MORE INFO:
-    https://github.com/mylee04/code-notify
+    https://github.com/collindjohnson/agent-notify
 
 "@ -ForegroundColor Gray
 }
 
 # Main command handler
-function Invoke-CodeNotify {
+function Invoke-AgentNotify {
     param(
         [Parameter(Position=0)]
         [string]$Command = "help",
@@ -1528,9 +1528,9 @@ function Invoke-CodeNotify {
         "test" { Send-TestNotification }
         "update" {
             if ($SubCommand -eq "check") {
-                Update-CodeNotify -Check
+                Update-AgentNotify -Check
             } else {
-                Update-CodeNotify
+                Update-AgentNotify
             }
         }
         "repair-hooks" {
@@ -1580,7 +1580,7 @@ function Invoke-CodeNotify {
             }
         }
         "help" { Show-Help }
-        "version" { Write-Output "code-notify version $script:VERSION" }
+        "version" { Write-Output "agent-notify version $script:VERSION" }
         default { Show-Help }
     }
 }
@@ -1597,12 +1597,12 @@ function Invoke-ClaudeNotify {
         [string[]]$Args
     )
 
-    Invoke-CodeNotify -Command $Command -SubCommand $SubCommand -Args $Args
+    Invoke-AgentNotify -Command $Command -SubCommand $SubCommand -Args $Args
 }
 
 # Export functions
 Export-ModuleMember -Function @(
-    'Invoke-CodeNotify',
+    'Invoke-AgentNotify',
     'Invoke-ClaudeNotify',
     'Send-Notification',
     'Send-VoiceNotification',
@@ -1620,19 +1620,19 @@ Export-ModuleMember -Function @(
     'Get-SystemSounds',
     'Show-SoundStatus',
     'Send-TestNotification',
-    'Update-CodeNotify',
+    'Update-AgentNotify',
     'Show-Help'
 )
 '@
 
     # Save main module
-    $mainScript | Set-Content "$InstallDir\lib\CodeNotify.psm1" -Encoding UTF8
+    $mainScript | Set-Content "$InstallDir\lib\AgentNotify.psm1" -Encoding UTF8
     $mainScript | Set-Content "$InstallDir\lib\ClaudeNotify.psm1" -Encoding UTF8
     Write-Success "Created PowerShell module"
 
     # Create the notification script (called by hooks)
 $notifyScript = @'
-# Code-Notify notification script
+# Agent-Notify notification script
 # Called by Claude Code, Codex, and Gemini hooks
 
 param(
@@ -1745,13 +1745,13 @@ $ToolDisplay = Get-ToolDisplayName $ToolName
 $NotificationStateDir = "$ClaudeHome\notifications\state"
 
 try {
-    $StopRateLimitSeconds = [int]($env:CODE_NOTIFY_STOP_RATE_LIMIT_SECONDS)
+    $StopRateLimitSeconds = [int]($env:AGENT_NOTIFY_STOP_RATE_LIMIT_SECONDS)
 } catch {
     $StopRateLimitSeconds = 10
 }
 
 try {
-    $NotificationRateLimitSeconds = [int]($env:CODE_NOTIFY_NOTIFICATION_RATE_LIMIT_SECONDS)
+    $NotificationRateLimitSeconds = [int]($env:AGENT_NOTIFY_NOTIFICATION_RATE_LIMIT_SECONDS)
 } catch {
     $NotificationRateLimitSeconds = 180
 }
@@ -1944,7 +1944,7 @@ switch ($HookType.ToLower()) {
         $VoiceMessage = "An error occurred in $ProjectName"
     }
     "test" {
-        $Title = "Code-Notify Test"
+        $Title = "Agent-Notify Test"
         $Message = "Notifications are working correctly!"
         $VoiceMessage = "Test notification successful"
     }
@@ -2046,7 +2046,7 @@ function Send-DesktopNotification {
         $xml = New-Object Windows.Data.Xml.Dom.XmlDocument
         $xml.LoadXml($template)
         $toast = New-Object Windows.UI.Notifications.ToastNotification $xml
-        [Windows.UI.Notifications.ToastNotificationManager]::CreateToastNotifier("Code-Notify").Show($toast)
+        [Windows.UI.Notifications.ToastNotificationManager]::CreateToastNotifier("Agent-Notify").Show($toast)
     }
     catch {
         # Final fallback - balloon notification (no click activation support)
@@ -2155,7 +2155,7 @@ exit 0
 
     # Create CLI wrapper scripts
     $cliWrapper = @'
-# Code-Notify CLI wrapper
+# Agent-Notify CLI wrapper
 param([Parameter(ValueFromRemainingArguments)][string[]]$Args)
 $requestedVersionShortcut = $false
 $invocationLine = [string]$MyInvocation.Line
@@ -2166,19 +2166,19 @@ if ($Args.Count -eq 1 -and @('version', '-v', '--version') -contains $Args[0]) {
 } elseif ($Args.Count -eq 0 -and $invocationLine -match '(^|\s)--version($|\s)') {
     $requestedVersionShortcut = $true
 }
-Import-Module "$env:USERPROFILE\.code-notify\lib\CodeNotify.psm1" -Force -Verbose:$false
+Import-Module "$env:USERPROFILE\.agent-notify\lib\AgentNotify.psm1" -Force -Verbose:$false
 if ($requestedVersionShortcut) {
-    Invoke-CodeNotify "version"
+    Invoke-AgentNotify "version"
 } else {
-    Invoke-CodeNotify @Args
+    Invoke-AgentNotify @Args
 }
 '@
 
-    $cliWrapper | Set-Content "$InstallDir\bin\code-notify.ps1" -Encoding UTF8
+    $cliWrapper | Set-Content "$InstallDir\bin\agent-notify.ps1" -Encoding UTF8
 
     # Create an alias
     $anWrapper = @'
-# an - Code-Notify shortcut
+# an - Agent-Notify shortcut
 param([Parameter(ValueFromRemainingArguments)][string[]]$Args)
 $requestedVersionShortcut = $false
 $invocationLine = [string]$MyInvocation.Line
@@ -2189,21 +2189,21 @@ if ($Args.Count -eq 1 -and @('version', '-v', '--version') -contains $Args[0]) {
 } elseif ($Args.Count -eq 0 -and $invocationLine -match '(^|\s)--version($|\s)') {
     $requestedVersionShortcut = $true
 }
-Import-Module "$env:USERPROFILE\.code-notify\lib\CodeNotify.psm1" -Force -Verbose:$false
+Import-Module "$env:USERPROFILE\.agent-notify\lib\AgentNotify.psm1" -Force -Verbose:$false
 if ($requestedVersionShortcut) {
-    Invoke-CodeNotify "version"
+    Invoke-AgentNotify "version"
 } else {
-    Invoke-CodeNotify @Args
+    Invoke-AgentNotify @Args
 }
 '@
     $anWrapper | Set-Content "$InstallDir\bin\an.ps1" -Encoding UTF8
 
     # Create anp alias (project commands)
     $anpWrapper = @'
-# anp - Code-Notify Project shortcut
+# anp - Agent-Notify Project shortcut
 param([Parameter(ValueFromRemainingArguments)][string[]]$Args)
-Import-Module "$env:USERPROFILE\.code-notify\lib\CodeNotify.psm1" -Force -Verbose:$false
-Invoke-CodeNotify "project" @Args
+Import-Module "$env:USERPROFILE\.agent-notify\lib\AgentNotify.psm1" -Force -Verbose:$false
+Invoke-AgentNotify "project" @Args
 '@
     $anpWrapper | Set-Content "$InstallDir\bin\anp.ps1" -Encoding UTF8
 
@@ -2239,17 +2239,17 @@ function Add-PowerShellProfile {
 
     $aliasBlock = @"
 
-# Code-Notify aliases (added by installer)
-Set-Alias -Name code-notify -Value "$InstallDir\bin\code-notify.ps1"
+# Agent-Notify aliases (added by installer)
+Set-Alias -Name agent-notify -Value "$InstallDir\bin\agent-notify.ps1"
 Set-Alias -Name an -Value "$InstallDir\bin\an.ps1"
 Set-Alias -Name anp -Value "$InstallDir\bin\anp.ps1"
-# End Code-Notify aliases
+# End Agent-Notify aliases
 
 "@
 
     if (Test-Path $profilePath) {
         $profileContent = Get-Content $profilePath -Raw -ErrorAction SilentlyContinue
-        if ($profileContent -notlike "*Code-Notify aliases*") {
+        if ($profileContent -notlike "*Agent-Notify aliases*") {
             Add-Content -Path $profilePath -Value $aliasBlock
             Write-Success "Added aliases to PowerShell profile"
         } else {
@@ -2262,7 +2262,7 @@ Set-Alias -Name anp -Value "$InstallDir\bin\anp.ps1"
 }
 
 function Uninstall-ClaudeNotify {
-    Write-Header "Uninstalling Code-Notify..."
+    Write-Header "Uninstalling Agent-Notify..."
 
     # Remove installation directory
     if (Test-Path $InstallDir) {
@@ -2283,12 +2283,12 @@ function Uninstall-ClaudeNotify {
     $profilePath = $PROFILE.CurrentUserAllHosts
     if (Test-Path $profilePath) {
         $content = Get-Content $profilePath -Raw
-        $content = $content -replace "(?s)# Code-Notify aliases.*?# End Code-Notify aliases\r?\n?", ""
+        $content = $content -replace "(?s)# Agent-Notify aliases.*?# End Agent-Notify aliases\r?\n?", ""
         $content | Set-Content $profilePath -Encoding UTF8
         Write-Success "Cleaned PowerShell profile"
     }
 
-    Write-Success "Code-Notify uninstalled successfully!"
+    Write-Success "Agent-Notify uninstalled successfully!"
     Write-Info "Note: Your Claude settings in $ClaudeHome were preserved"
 }
 
@@ -2317,7 +2317,7 @@ function Show-PostInstall {
     Write-Host "For enhanced notifications (recommended):" -ForegroundColor White
     Write-Host "  Install-Module -Name BurntToast -Scope CurrentUser" -ForegroundColor Cyan
     Write-Host ""
-    Write-Host "More info: https://github.com/mylee04/code-notify" -ForegroundColor DarkGray
+    Write-Host "More info: https://github.com/collindjohnson/agent-notify" -ForegroundColor DarkGray
     Write-Host ""
 }
 
@@ -2344,8 +2344,8 @@ function Main {
     }
 
     try {
-        Import-Module "$InstallDir\lib\CodeNotify.psm1" -Force -Verbose:$false
-        Invoke-CodeNotify "repair-hooks" "--quiet"
+        Import-Module "$InstallDir\lib\AgentNotify.psm1" -Force -Verbose:$false
+        Invoke-AgentNotify "repair-hooks" "--quiet"
     } catch {
         Write-Warning "Legacy Claude hook repair did not complete during install"
     }

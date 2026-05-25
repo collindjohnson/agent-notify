@@ -63,7 +63,7 @@ Review generates a report with:
 ## Usage
 
 ```
-Review the changes in lib/code-notify/core/notifier.sh
+Review the changes in lib/agent-notify/core/notifier.sh
 ```
 
 The code-reviewer agent will be invoked automatically.

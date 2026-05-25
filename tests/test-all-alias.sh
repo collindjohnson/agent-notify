@@ -16,11 +16,11 @@ run_enable_all_alias_test() {
         export CLAUDE_HOME="$HOME/.claude"
         mkdir -p "$CLAUDE_HOME/notifications"
 
-        source "$SCRIPT_DIR/../lib/code-notify/utils/colors.sh"
-        source "$SCRIPT_DIR/../lib/code-notify/utils/detect.sh"
-        source "$SCRIPT_DIR/../lib/code-notify/utils/help.sh"
-        source "$SCRIPT_DIR/../lib/code-notify/core/config.sh"
-        source "$SCRIPT_DIR/../lib/code-notify/commands/global.sh"
+        source "$SCRIPT_DIR/../lib/agent-notify/utils/colors.sh"
+        source "$SCRIPT_DIR/../lib/agent-notify/utils/detect.sh"
+        source "$SCRIPT_DIR/../lib/agent-notify/utils/help.sh"
+        source "$SCRIPT_DIR/../lib/agent-notify/core/config.sh"
+        source "$SCRIPT_DIR/../lib/agent-notify/commands/global.sh"
 
         get_installed_tools() { echo "claude codex gemini cursor"; }
         is_tool_installed() { return 0; }
@@ -50,11 +50,11 @@ run_disable_all_alias_test() {
         export CLAUDE_HOME="$HOME/.claude"
         mkdir -p "$CLAUDE_HOME/notifications"
 
-        source "$SCRIPT_DIR/../lib/code-notify/utils/colors.sh"
-        source "$SCRIPT_DIR/../lib/code-notify/utils/detect.sh"
-        source "$SCRIPT_DIR/../lib/code-notify/utils/help.sh"
-        source "$SCRIPT_DIR/../lib/code-notify/core/config.sh"
-        source "$SCRIPT_DIR/../lib/code-notify/commands/global.sh"
+        source "$SCRIPT_DIR/../lib/agent-notify/utils/colors.sh"
+        source "$SCRIPT_DIR/../lib/agent-notify/utils/detect.sh"
+        source "$SCRIPT_DIR/../lib/agent-notify/utils/help.sh"
+        source "$SCRIPT_DIR/../lib/agent-notify/core/config.sh"
+        source "$SCRIPT_DIR/../lib/agent-notify/commands/global.sh"
 
         is_tool_enabled() { return 0; }
         disable_tool() {
@@ -81,11 +81,11 @@ run_status_all_alias_test() {
         export CLAUDE_HOME="$HOME/.claude"
         mkdir -p "$CLAUDE_HOME/notifications"
 
-        source "$SCRIPT_DIR/../lib/code-notify/utils/colors.sh"
-        source "$SCRIPT_DIR/../lib/code-notify/utils/detect.sh"
-        source "$SCRIPT_DIR/../lib/code-notify/utils/help.sh"
-        source "$SCRIPT_DIR/../lib/code-notify/core/config.sh"
-        source "$SCRIPT_DIR/../lib/code-notify/commands/global.sh"
+        source "$SCRIPT_DIR/../lib/agent-notify/utils/colors.sh"
+        source "$SCRIPT_DIR/../lib/agent-notify/utils/detect.sh"
+        source "$SCRIPT_DIR/../lib/agent-notify/utils/help.sh"
+        source "$SCRIPT_DIR/../lib/agent-notify/core/config.sh"
+        source "$SCRIPT_DIR/../lib/agent-notify/commands/global.sh"
 
         is_tool_installed() { return 1; }
         is_tool_enabled() { return 1; }

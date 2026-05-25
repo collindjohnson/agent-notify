@@ -3,7 +3,7 @@
 set -e
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-NOTIFIER="$SCRIPT_DIR/../lib/code-notify/core/notifier.sh"
+NOTIFIER="$SCRIPT_DIR/../lib/agent-notify/core/notifier.sh"
 
 pass() { echo "PASS: $1"; }
 fail() { echo "FAIL: $1"; exit 1; }

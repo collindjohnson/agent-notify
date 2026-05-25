@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Global command handlers for Code-Notify
+# Global command handlers for Agent-Notify
 
 # Source utilities
 GLOBAL_CMD_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
@@ -9,7 +9,7 @@ source "$GLOBAL_CMD_DIR/../utils/sound.sh"
 source "$GLOBAL_CMD_DIR/../utils/help.sh"
 source "$GLOBAL_CMD_DIR/../utils/click-through.sh"
 
-CODE_NOTIFY_RELEASES_API="https://api.github.com/repos/mylee04/code-notify/releases/latest"
+AGENT_NOTIFY_RELEASES_API="https://api.github.com/repos/collindjohnson/agent-notify/releases/latest"
 
 # Handle global commands
 handle_global_command() {
@@ -60,23 +60,23 @@ handle_global_command() {
     esac
 }
 
-# Detect how the current code-notify command was installed.
+# Detect how the current agent-notify command was installed.
 detect_update_method() {
     local source_dir="${1:-$GLOBAL_CMD_DIR}"
 
-    if [[ -n "${CODE_NOTIFY_INSTALL_METHOD:-}" ]]; then
-        echo "$CODE_NOTIFY_INSTALL_METHOD"
+    if [[ -n "${AGENT_NOTIFY_INSTALL_METHOD:-}" ]]; then
+        echo "$AGENT_NOTIFY_INSTALL_METHOD"
         return 0
     fi
 
     case "$source_dir" in
-        /opt/homebrew/Cellar/code-notify/*|/usr/local/Cellar/code-notify/*|/opt/homebrew/opt/code-notify/*|/usr/local/opt/code-notify/*)
+        /opt/homebrew/Cellar/agent-notify/*|/usr/local/Cellar/agent-notify/*|/opt/homebrew/opt/agent-notify/*|/usr/local/opt/agent-notify/*)
             echo "homebrew"
             ;;
-        */node_modules/code-notify/lib/code-notify/*)
+        */node_modules/agent-notify/lib/agent-notify/*)
             echo "npm"
             ;;
-        "$HOME"/.code-notify/lib/code-notify/*)
+        "$HOME"/.agent-notify/lib/agent-notify/*)
             echo "script"
             ;;
         *)
@@ -137,8 +137,8 @@ compare_versions() {
 get_latest_release_version() {
     local response latest_version
 
-    if [[ -n "${CODE_NOTIFY_LATEST_VERSION:-}" ]]; then
-        normalize_version "$CODE_NOTIFY_LATEST_VERSION"
+    if [[ -n "${AGENT_NOTIFY_LATEST_VERSION:-}" ]]; then
+        normalize_version "$AGENT_NOTIFY_LATEST_VERSION"
         return 0
     fi
 
@@ -146,7 +146,7 @@ get_latest_release_version() {
         return 1
     fi
 
-    response="$(curl -fsSL "$CODE_NOTIFY_RELEASES_API" 2>/dev/null)" || return 1
+    response="$(curl -fsSL "$AGENT_NOTIFY_RELEASES_API" 2>/dev/null)" || return 1
     latest_version="$(printf '%s\n' "$response" | grep -m1 '"tag_name"' | sed -E 's/.*"tag_name"[[:space:]]*:[[:space:]]*"v?([^"]+)".*/\1/')"
 
     [[ -n "$latest_version" ]] || return 1
@@ -165,7 +165,7 @@ print_update_status() {
             ;;
         0)
             info "Current version: $current_version"
-            success "Code-Notify is up to date ($current_version)"
+            success "Agent-Notify is up to date ($current_version)"
             ;;
         1)
             info "Current version: $current_version"
@@ -193,13 +193,13 @@ get_update_command() {
 
     case "$method" in
         "homebrew")
-            echo "brew update && brew upgrade code-notify"
+            echo "brew update && brew upgrade agent-notify"
             ;;
         "npm")
-            echo "npm install -g code-notify@latest"
+            echo "npm install -g agent-notify@latest"
             ;;
         "script")
-            echo "curl -fsSL https://raw.githubusercontent.com/mylee04/code-notify/main/scripts/install.sh | bash"
+            echo "curl -fsSL https://raw.githubusercontent.com/collindjohnson/agent-notify/main/scripts/install.sh | bash"
             ;;
         *)
             return 1
@@ -213,13 +213,13 @@ run_update_for_method() {
 
     case "$method" in
         "homebrew")
-            brew update && brew upgrade code-notify
+            brew update && brew upgrade agent-notify
             ;;
         "npm")
-            npm install -g code-notify@latest
+            npm install -g agent-notify@latest
             ;;
         "script")
-            curl -fsSL https://raw.githubusercontent.com/mylee04/code-notify/main/scripts/install.sh | bash
+            curl -fsSL https://raw.githubusercontent.com/collindjohnson/agent-notify/main/scripts/install.sh | bash
             ;;
         *)
             return 1
@@ -249,24 +249,24 @@ check_for_updates() {
     case "$method" in
         "homebrew")
             info "Install method: Homebrew"
-            echo "To update code-notify, run:"
+            echo "To update agent-notify, run:"
             echo "  ${CYAN}$(get_update_command "$method")${RESET}"
             ;;
         "npm")
             info "Install method: npm"
-            echo "To update code-notify, run:"
+            echo "To update agent-notify, run:"
             echo "  ${CYAN}$(get_update_command "$method")${RESET}"
             ;;
         "script")
             info "Install method: install script"
-            echo "To update code-notify, run:"
+            echo "To update agent-notify, run:"
             echo "  ${CYAN}$(get_update_command "$method")${RESET}"
             ;;
         *)
             warning "Local checkout or unsupported install method detected"
             echo "Update manually:"
             echo "  ${CYAN}git pull${RESET}"
-            echo "  ${CYAN}https://github.com/mylee04/code-notify${RESET}"
+            echo "  ${CYAN}https://github.com/collindjohnson/agent-notify${RESET}"
             ;;
     esac
 }
@@ -290,7 +290,7 @@ handle_update_command() {
             method=$(detect_update_method)
 
             echo ""
-            header "${ROCKET} Updating Code-Notify"
+            header "${ROCKET} Updating Agent-Notify"
             echo ""
 
             case "$method" in
@@ -326,19 +326,19 @@ handle_update_command() {
             fi
 
             if ! run_update_for_method "$method"; then
-                error "Failed to update code-notify"
+                error "Failed to update agent-notify"
                 return 1
             fi
 
             success "Update complete!"
-            info "Run ${CYAN}code-notify version${RESET} to confirm the installed version"
+            info "Run ${CYAN}agent-notify version${RESET} to confirm the installed version"
             ;;
     esac
 }
 
 # Show version (can be called from handle_global_command)
 show_version() {
-    echo "code-notify version $VERSION"
+    echo "agent-notify version $VERSION"
 }
 
 # Enable notifications globally
@@ -518,7 +518,7 @@ show_status() {
         fi
     done
 
-    header "${INFO} Code-Notify Status"
+    header "${INFO} Agent-Notify Status"
     echo ""
 
     # Check for kill switch
@@ -649,7 +649,7 @@ show_status() {
 
     # Show version
     echo ""
-    dim "code-notify version $VERSION"
+    dim "agent-notify version $VERSION"
 
     # Check for updates if --check-updates flag is passed
     if [[ -n "$check_updates_flag" ]]; then
@@ -673,11 +673,11 @@ test_notification() {
         # Fallback to basic notification
         if command -v terminal-notifier &> /dev/null; then
             terminal-notifier \
-                -title "Code-Notify Test ${CHECK_MARK}" \
+                -title "Agent-Notify Test ${CHECK_MARK}" \
                 -message "Notifications are working!" \
                 -sound "Glass"
         else
-            osascript -e 'display notification "Notifications are working!" with title "Code-Notify Test"'
+            osascript -e 'display notification "Notifications are working!" with title "Agent-Notify Test"'
         fi
     else
         # Use the actual notification script
@@ -692,7 +692,7 @@ test_notification() {
 
 # Run setup wizard
 run_setup_wizard() {
-    header "${ROCKET} Code-Notify Setup Wizard"
+    header "${ROCKET} Agent-Notify Setup Wizard"
     echo ""
     
     # Check Claude Code
@@ -701,7 +701,7 @@ run_setup_wizard() {
         success "Claude Code found at: $(detect_claude_code)"
     else
         warning "Claude Code installation not detected"
-        info "Code-Notify will create configuration at: $CLAUDE_HOME"
+        info "Agent-Notify will create configuration at: $CLAUDE_HOME"
     fi
     
     # Check notification system

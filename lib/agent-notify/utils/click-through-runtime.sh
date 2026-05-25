@@ -26,8 +26,8 @@ click_through_detect_parent_app_path() {
     local pid=$$
     local parent command app_path
 
-    if [[ -n "${CODE_NOTIFY_CLICK_THROUGH_APP_PATH:-}" ]] && [[ -d "${CODE_NOTIFY_CLICK_THROUGH_APP_PATH}" ]]; then
-        printf '%s\n' "${CODE_NOTIFY_CLICK_THROUGH_APP_PATH}"
+    if [[ -n "${AGENT_NOTIFY_CLICK_THROUGH_APP_PATH:-}" ]] && [[ -d "${AGENT_NOTIFY_CLICK_THROUGH_APP_PATH}" ]]; then
+        printf '%s\n' "${AGENT_NOTIFY_CLICK_THROUGH_APP_PATH}"
         return 0
     fi
 

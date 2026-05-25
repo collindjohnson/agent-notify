@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Core notification functionality for Code-Notify
+# Core notification functionality for Agent-Notify
 # Supports: Claude Code, Codex, Gemini CLI
 
 # Get arguments:
@@ -136,9 +136,9 @@ TOOL_DISPLAY=$(get_tool_display_name "$TOOL_NAME")
 # Rate limiting for stop notifications (prevents spam from parallel sub-agents)
 NOTIFICATIONS_DIR="$HOME/.claude/notifications"
 RATE_LIMIT_DIR="$NOTIFICATIONS_DIR/state"
-STOP_RATE_LIMIT_SECONDS="${CODE_NOTIFY_STOP_RATE_LIMIT_SECONDS:-10}"
-NOTIFICATION_RATE_LIMIT_SECONDS="${CODE_NOTIFY_NOTIFICATION_RATE_LIMIT_SECONDS:-180}"
-EVENT_RATE_LIMIT_SECONDS="${CODE_NOTIFY_EVENT_RATE_LIMIT_SECONDS:-10}"
+STOP_RATE_LIMIT_SECONDS="${AGENT_NOTIFY_STOP_RATE_LIMIT_SECONDS:-10}"
+NOTIFICATION_RATE_LIMIT_SECONDS="${AGENT_NOTIFY_NOTIFICATION_RATE_LIMIT_SECONDS:-180}"
+EVENT_RATE_LIMIT_SECONDS="${AGENT_NOTIFY_EVENT_RATE_LIMIT_SECONDS:-10}"
 
 sanitize_rate_limit_key() {
     printf '%s' "$1" | tr -c 'A-Za-z0-9._-' '_'
@@ -240,7 +240,7 @@ update_rate_limit() {
 }
 
 is_project_scoped_notification() {
-    if [[ "${CODE_NOTIFY_SCOPE:-}" == "project" ]]; then
+    if [[ "${AGENT_NOTIFY_SCOPE:-}" == "project" ]]; then
         return 0
     fi
 
@@ -310,10 +310,10 @@ PY
 }
 
 # Suppress only when this Codex event came from the desktop app itself.
-# Set CODE_NOTIFY_SKIP_CODEX_DESKTOP_CHECK=1 to disable (used in tests).
+# Set AGENT_NOTIFY_SKIP_CODEX_DESKTOP_CHECK=1 to disable (used in tests).
 is_codex_desktop_trigger() {
     [[ "$TOOL_NAME" != "codex" ]] && return 1
-    [[ "${CODE_NOTIFY_SKIP_CODEX_DESKTOP_CHECK:-}" == "1" ]] && return 1
+    [[ "${AGENT_NOTIFY_SKIP_CODEX_DESKTOP_CHECK:-}" == "1" ]] && return 1
 
     local client
     client=$(json_extract_string "$HOOK_DATA" "client" | tr '[:upper:]' '[:lower:]')
@@ -470,7 +470,7 @@ case "$HOOK_TYPE" in
         SOUND="Basso"
         ;;
     "test")
-        TITLE="Code-Notify Test ✅"
+        TITLE="Agent-Notify Test ✅"
         SUBTITLE="$PROJECT_NAME"
         MESSAGE="Notifications are working!"
         VOICE_MESSAGE="Notifications are working"
@@ -511,7 +511,7 @@ send_macos_notification() {
             -title "$TITLE" \
             -subtitle "$SUBTITLE" \
             -message "$MESSAGE" \
-            -group "code-notify-$TOOL_NAME-$PROJECT_NAME" \
+            -group "agent-notify-$TOOL_NAME-$PROJECT_NAME" \
             -activate "$bundle_id" \
             2>/dev/null
     else
@@ -526,7 +526,7 @@ send_linux_notification() {
     if command -v notify-send &> /dev/null; then
         notify-send "$TITLE" "$MESSAGE" \
             --urgency=normal \
-            --app-name="Code-Notify" \
+            --app-name="Agent-Notify" \
             --icon=dialog-information \
             2>/dev/null
     elif command -v zenity &> /dev/null; then

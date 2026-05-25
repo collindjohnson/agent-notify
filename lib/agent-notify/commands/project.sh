@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Project-specific command handlers for Code-Notify
+# Project-specific command handlers for Agent-Notify
 
 # Source voice utilities
 PROJECT_CMD_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
@@ -37,7 +37,7 @@ handle_project_command() {
 }
 
 get_claude_trust_file() {
-    echo "${CODE_NOTIFY_CLAUDE_TRUST_FILE:-$HOME/.claude.json}"
+    echo "${AGENT_NOTIFY_CLAUDE_TRUST_FILE:-$HOME/.claude.json}"
 }
 
 is_claude_project_trusted() {
@@ -157,11 +157,11 @@ enable_notifications_project() {
         # Fallback notification
         if command -v terminal-notifier &> /dev/null; then
             terminal-notifier \
-                -title "Code-Notify Test ${CHECK_MARK}" \
+                -title "Agent-Notify Test ${CHECK_MARK}" \
                 -message "Project notifications enabled for $project_name" \
                 -sound "Glass"
         else
-            osascript -e "display notification \"Project notifications enabled for $project_name\" with title \"Code-Notify Test\"" 2>/dev/null || true
+            osascript -e "display notification \"Project notifications enabled for $project_name\" with title \"Agent-Notify Test\"" 2>/dev/null || true
         fi
     fi
     

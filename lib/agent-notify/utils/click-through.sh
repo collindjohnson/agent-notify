@@ -316,7 +316,7 @@ ${BOLD}COMMANDS:${RESET}
     ${GREEN}reset${RESET}            Remove all custom mappings
     ${GREEN}help${RESET}             Show this help text
 
-    Note: controls which app Code-Notify activates when you click a macOS notification.
+    Note: controls which app Agent-Notify activates when you click a macOS notification.
 
 ${BOLD}EXAMPLES:${RESET}
     an click-through
