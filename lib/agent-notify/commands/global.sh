@@ -8,6 +8,7 @@ source "$GLOBAL_CMD_DIR/../utils/voice.sh"
 source "$GLOBAL_CMD_DIR/../utils/sound.sh"
 source "$GLOBAL_CMD_DIR/../utils/help.sh"
 source "$GLOBAL_CMD_DIR/../utils/click-through.sh"
+source "$GLOBAL_CMD_DIR/../utils/macos-notifications.sh"
 
 AGENT_NOTIFY_RELEASES_API="https://api.github.com/repos/collindjohnson/agent-notify/releases/latest"
 
@@ -672,7 +673,7 @@ test_notification() {
     if [[ ! -f "$notify_script" ]]; then
         # Fallback to basic notification
         if command -v terminal-notifier &> /dev/null; then
-            terminal-notifier \
+            send_terminal_notifier \
                 -title "Agent-Notify Test ${CHECK_MARK}" \
                 -message "Notifications are working!" \
                 -sound "Glass"

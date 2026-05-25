@@ -5,6 +5,7 @@
 # Source voice utilities
 PROJECT_CMD_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 source "$PROJECT_CMD_DIR/../utils/voice.sh"
+source "$PROJECT_CMD_DIR/../utils/macos-notifications.sh"
 
 # Handle project commands
 handle_project_command() {
@@ -156,7 +157,7 @@ enable_notifications_project() {
     else
         # Fallback notification
         if command -v terminal-notifier &> /dev/null; then
-            terminal-notifier \
+            send_terminal_notifier \
                 -title "Agent-Notify Test ${CHECK_MARK}" \
                 -message "Project notifications enabled for $project_name" \
                 -sound "Glass"

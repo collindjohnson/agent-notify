@@ -15,6 +15,7 @@ NOTIFIER_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 source "$NOTIFIER_DIR/../utils/detect.sh"
 source "$NOTIFIER_DIR/../utils/voice.sh"
 source "$NOTIFIER_DIR/../utils/sound.sh"
+source "$NOTIFIER_DIR/../utils/macos-notifications.sh"
 source "$NOTIFIER_DIR/../utils/click-through-store.sh"
 source "$NOTIFIER_DIR/../utils/click-through-runtime.sh"
 source "$NOTIFIER_DIR/../utils/click-through-resolver.sh"
@@ -507,7 +508,7 @@ send_macos_notification() {
     if command -v terminal-notifier &> /dev/null; then
         # Keep desktop notifications silent and let play_sound() own audio playback.
         # That avoids double audio and preserves custom sound files.
-        terminal-notifier \
+        send_terminal_notifier \
             -title "$TITLE" \
             -subtitle "$SUBTITLE" \
             -message "$MESSAGE" \
