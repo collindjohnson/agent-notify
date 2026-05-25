@@ -4,7 +4,7 @@
 >
 > **Homebrew**: `brew tap collindjohnson/agent-notify https://github.com/collindjohnson/agent-notify && brew install agent-notify && an on`
 >
-> **npm**: `npm install -g agent-notify`
+> **npm**: `npm install -g github:collindjohnson/agent-notify`
 
 Desktop notifications for AI coding tools - get alerts when tasks complete or input is needed.
 
@@ -56,7 +56,7 @@ curl -sSL https://raw.githubusercontent.com/collindjohnson/agent-notify/main/scr
 **npm (macOS / Linux / Windows)**
 
 ```bash
-npm install -g agent-notify
+npm install -g github:collindjohnson/agent-notify
 an on
 ```
 
@@ -215,7 +215,7 @@ an test
 **Installed with npm?**
 
 ```bash
-an update     # Runs: npm install -g agent-notify@latest
+an update     # Runs: npm install -g github:collindjohnson/agent-notify
 ```
 
 **Too many `last_notification_*` files in `~/.claude/notifications`?**

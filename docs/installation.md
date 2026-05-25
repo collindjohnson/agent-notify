@@ -131,7 +131,7 @@ an on
 ### npm (macOS / Linux / Windows)
 
 ```bash
-npm install -g agent-notify
+npm install -g github:collindjohnson/agent-notify
 an on
 ```
 

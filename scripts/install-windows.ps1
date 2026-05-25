@@ -1227,7 +1227,7 @@ function Get-InstallMethod {
 function Get-UpdateCommand {
     switch (Get-InstallMethod) {
         "npm" {
-            return "npm install -g agent-notify@latest"
+            return "npm install -g github:collindjohnson/agent-notify"
         }
         default {
             return "irm https://raw.githubusercontent.com/collindjohnson/agent-notify/main/scripts/install-windows.ps1 | iex"
@@ -1407,7 +1407,7 @@ function Update-AgentNotify {
         switch ($installMethod) {
             "npm" {
                 $null = Get-Command npm -ErrorAction Stop
-                & npm install -g agent-notify@latest
+                & npm install -g github:collindjohnson/agent-notify
                 if ($LASTEXITCODE -ne 0) {
                     throw "npm install failed with exit code $LASTEXITCODE"
                 }
