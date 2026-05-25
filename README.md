@@ -31,7 +31,7 @@ Desktop notifications for AI coding tools - get alerts when tasks complete or in
 
 ## Features
 
-- **Multi-tool support** - Claude Code, OpenAI Codex, Google Gemini CLI
+- **Multi-tool support** - Claude Code, OpenAI Codex, Google Gemini CLI, Cursor Agent
 - **Works everywhere** - Terminal, VSCode, Cursor, or any editor
 - **Cross-platform** - macOS, Linux, Windows
 - **Native notifications** - Uses system notification APIs
@@ -108,6 +108,7 @@ curl -s https://raw.githubusercontent.com/mylee04/code-notify/main/docs/installa
 | `cn on claude`       | Enable for Claude Code only                  |
 | `cn on codex`        | Enable for Codex only                        |
 | `cn on gemini`       | Enable for Gemini CLI only                   |
+| `cn on cursor`       | Install the Cursor Agent notification wrapper |
 | `cn off`             | Disable notifications                        |
 | `cn off all`         | Explicit alias for disabling all tools       |
 | `cn test`            | Send test notification                       |
@@ -134,9 +135,18 @@ Code-Notify uses the hook systems built into AI coding tools:
 - **Claude Code**: `~/.claude/settings.json`
 - **Codex**: `~/.codex/config.toml`
 - **Gemini CLI**: `~/.gemini/settings.json`
+- **Cursor Agent**: `~/.local/bin/cursor-notify` wrapper
 
 For Codex, Code-Notify configures `notify = ["/absolute/path/to/notifier.sh", "codex"]` and reads the JSON payload Codex appends on completion.
 Codex currently exposes completion events through `notify`; approval and `request_permissions` prompts do not currently arrive through this hook.
+
+Cursor Agent does not currently expose a hook configuration file. `cn on cursor` installs a `cursor-notify` wrapper that runs Cursor Agent and sends a Code-Notify completion or error notification when the process exits:
+
+```sh
+cursor-notify "your prompt"
+cursor-notify -p --trust "run tests and summarize"
+cursor-notify agent --mode ask "explain this repo"
+```
 
 When enabled, it adds hooks that call the notification script when tasks complete:
 

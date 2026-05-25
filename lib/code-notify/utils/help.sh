@@ -14,7 +14,7 @@ show_help() {
 ${BOLD}Code-Notify${RESET} - Desktop notifications for AI coding tools
 
 ${BOLD}SUPPORTED TOOLS:${RESET}
-    Claude Code, OpenAI Codex, Google Gemini CLI
+    Claude Code, OpenAI Codex, Google Gemini CLI, Cursor Agent
 
 ${BOLD}USAGE:${RESET}
     $cmd_name <command> [tool]
@@ -22,7 +22,7 @@ ${BOLD}USAGE:${RESET}
 ${BOLD}COMMANDS:${RESET}
     ${GREEN}on${RESET}              Enable notifications (all detected tools)
     ${GREEN}on${RESET} all          Enable notifications (explicit alias for all detected tools)
-    ${GREEN}on${RESET} <tool>       Enable for specific tool (claude/codex/gemini)
+    ${GREEN}on${RESET} <tool>       Enable for specific tool (claude/codex/gemini/cursor)
     ${GREEN}off${RESET}             Disable notifications (all tools)
     ${GREEN}off${RESET} all         Disable notifications (explicit alias for all tools)
     ${GREEN}off${RESET} <tool>      Disable for specific tool
@@ -49,6 +49,7 @@ ${BOLD}TOOL NAMES:${RESET}
     ${CYAN}claude${RESET}          Claude Code
     ${CYAN}codex${RESET}           OpenAI Codex CLI
     ${CYAN}gemini${RESET}          Google Gemini CLI
+    ${CYAN}cursor${RESET}          Cursor Agent (via cursor-notify wrapper)
 
 ${BOLD}PROJECT COMMANDS:${RESET}
     ${GREEN}project on${RESET}      Enable for current project
@@ -106,6 +107,7 @@ ${BOLD}EXAMPLES:${RESET}
     cn on                   # Enable for all detected tools
     cn on all               # Same as cn on
     cn on claude            # Enable for Claude Code only
+    cn on cursor            # Install the cursor-notify wrapper
     cn off                  # Disable all
     cn off all              # Same as cn off
     cn status               # Show status for all tools

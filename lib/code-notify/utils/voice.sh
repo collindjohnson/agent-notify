@@ -72,6 +72,7 @@ disable_voice() {
             rm -f "$VOICE_DIR/voice-claude"
             rm -f "$VOICE_DIR/voice-codex"
             rm -f "$VOICE_DIR/voice-gemini"
+            rm -f "$VOICE_DIR/voice-cursor"
             ;;
         "global"|*)
             rm -f "$GLOBAL_VOICE_FILE"
@@ -141,7 +142,8 @@ is_voice_enabled() {
             [[ -f "$GLOBAL_VOICE_FILE" ]] || \
             [[ -f "$VOICE_DIR/voice-claude" ]] || \
             [[ -f "$VOICE_DIR/voice-codex" ]] || \
-            [[ -f "$VOICE_DIR/voice-gemini" ]]
+            [[ -f "$VOICE_DIR/voice-gemini" ]] || \
+            [[ -f "$VOICE_DIR/voice-cursor" ]]
             return $?
             ;;
         "global"|*)
@@ -171,7 +173,7 @@ get_voice_status() {
     fi
 
     # Per-tool
-    for tool in claude codex gemini; do
+    for tool in claude codex gemini cursor; do
         local tool_file="$VOICE_DIR/voice-$tool"
         if [[ -f "$tool_file" ]]; then
             local voice=$(cat "$tool_file")

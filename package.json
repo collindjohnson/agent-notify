@@ -1,7 +1,7 @@
 {
   "name": "code-notify",
   "version": "1.7.4",
-  "description": "Desktop notifications for Claude Code, OpenAI Codex, and Gemini CLI",
+  "description": "Desktop notifications for Claude Code, OpenAI Codex, Gemini CLI, and Cursor Agent",
   "license": "MIT",
   "homepage": "https://github.com/mylee04/code-notify#readme",
   "repository": {
@@ -15,6 +15,7 @@
     "ai",
     "claude",
     "codex",
+    "cursor",
     "gemini",
     "notifications",
     "cli"

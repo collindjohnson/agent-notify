@@ -365,7 +365,7 @@ enable_notifications_global() {
 
     if [[ -z "$installed_tools" ]]; then
         warning "No supported AI tools detected"
-        info "Supported tools: Claude Code, Codex, Gemini CLI"
+        info "Supported tools: Claude Code, Codex, Gemini CLI, Cursor Agent"
         return 1
     fi
 
@@ -432,6 +432,7 @@ enable_single_tool() {
         "claude") config_file="$GLOBAL_SETTINGS_FILE" ;;
         "codex") config_file="$CODEX_CONFIG_FILE" ;;
         "gemini") config_file="$GEMINI_SETTINGS_FILE" ;;
+        "cursor") config_file="$(get_cursor_notify_wrapper)" ;;
     esac
 
     success "$tool: ENABLED"
@@ -462,7 +463,7 @@ disable_notifications_global() {
     # No tool specified - disable all enabled tools
     local disabled_count=0
 
-    for t in claude codex gemini; do
+    for t in claude codex gemini cursor; do
         if is_tool_enabled "$t"; then
             if disable_single_tool "$t" "quiet"; then
                 ((disabled_count++))
@@ -570,6 +571,20 @@ show_status() {
         fi
     else
         echo "  ${DIM}- Gemini CLI: not installed${RESET}"
+    fi
+
+    # Cursor Agent
+    if is_tool_installed "cursor"; then
+        if is_tool_enabled "cursor"; then
+            echo "  ${CHECK_MARK} Cursor Agent: ${GREEN}ENABLED${RESET}"
+            echo "     Wrapper: $(get_cursor_notify_wrapper)"
+            echo "     Usage: cursor-notify [cursor agent options] [prompt...]"
+        else
+            echo "  ${MUTE} Cursor Agent: ${DIM}DISABLED${RESET}"
+            echo "     Run: ${CYAN}cn on cursor${RESET} to install the cursor-notify wrapper"
+        fi
+    else
+        echo "  ${DIM}- Cursor Agent: not installed${RESET}"
     fi
 
     # Voice status
@@ -892,12 +907,13 @@ show_voice_status() {
     fi
 
     # Per-tool voice
-    for tool in claude codex gemini; do
+    for tool in claude codex gemini cursor; do
         local tool_display
         case "$tool" in
             "claude") tool_display="Claude" ;;
             "codex") tool_display="Codex" ;;
             "gemini") tool_display="Gemini" ;;
+            "cursor") tool_display="Cursor" ;;
         esac
 
         if is_voice_enabled "tool" "$tool"; then

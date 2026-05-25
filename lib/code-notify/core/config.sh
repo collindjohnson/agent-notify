@@ -53,6 +53,9 @@ CODEX_CONFIG_FILE="$CODEX_HOME/config.toml"
 GEMINI_HOME="${GEMINI_HOME:-$HOME/.gemini}"
 GEMINI_SETTINGS_FILE="$GEMINI_HOME/settings.json"
 
+# Cursor Agent wrapper path
+CURSOR_NOTIFY_WRAPPER="${CURSOR_NOTIFY_WRAPPER:-$HOME/.local/bin/cursor-notify}"
+
 # Ensure config directory exists
 ensure_config_dir() {
     mkdir -p "$CONFIG_DIR" "$BACKUP_DIR"
@@ -567,6 +570,10 @@ get_notify_script() {
     else
         echo "$(dirname "${BASH_SOURCE[0]}")/notifier.sh"
     fi
+}
+
+get_cursor_notify_wrapper() {
+    printf '%s\n' "$CURSOR_NOTIFY_WRAPPER"
 }
 
 # Validate hooks file format
@@ -1250,6 +1257,104 @@ PYTHON
 }
 
 # ============================================
+# Cursor Agent Wrapper Configuration
+# ============================================
+
+get_cursor_command() {
+    if command -v cursor &> /dev/null; then
+        command -v cursor
+    elif command -v cursor-agent &> /dev/null; then
+        command -v cursor-agent
+    elif command -v agent &> /dev/null; then
+        command -v agent
+    else
+        return 1
+    fi
+}
+
+is_cursor_wrapper_managed() {
+    local wrapper
+    wrapper="$(get_cursor_notify_wrapper)"
+    [[ -f "$wrapper" ]] && grep -q "Code-Notify Cursor Agent wrapper" "$wrapper" 2>/dev/null
+}
+
+is_cursor_enabled() {
+    local wrapper
+    wrapper="$(get_cursor_notify_wrapper)"
+    [[ -x "$wrapper" ]] && is_cursor_wrapper_managed
+}
+
+enable_cursor_hooks() {
+    local wrapper notify_script cursor_command wrapper_dir
+    wrapper="$(get_cursor_notify_wrapper)"
+    notify_script="$(get_notify_script)"
+    cursor_command="$(get_cursor_command)" || return 1
+    wrapper_dir="$(dirname "$wrapper")"
+
+    mkdir -p "$wrapper_dir"
+
+    if [[ -e "$wrapper" ]] && ! is_cursor_wrapper_managed; then
+        backup_config "$wrapper" || true
+    fi
+
+    atomic_write "$wrapper" "#!/bin/bash
+# Code-Notify Cursor Agent wrapper
+set -u
+
+NOTIFY_SCRIPT=\"$(toml_escape_string "$notify_script")\"
+CURSOR_COMMAND=\"$(toml_escape_string "$cursor_command")\"
+PROJECT_NAME=\"\${CURSOR_NOTIFY_PROJECT:-\$(basename \"\$PWD\")}\"
+
+if [[ \"\${1:-}\" == \"--test\" ]]; then
+    \"\$NOTIFY_SCRIPT\" test cursor \"\$PROJECT_NAME\"
+    exit 0
+fi
+
+if [[ \"\${1:-}\" == \"-h\" || \"\${1:-}\" == \"--help\" ]]; then
+    cat <<'EOF'
+Usage:
+  cursor-notify [cursor agent options] [prompt...]
+  cursor-notify agent [cursor agent options] [prompt...]
+  cursor-notify --test
+
+Runs Cursor Agent and sends a Code-Notify desktop notification when it exits.
+EOF
+    exit 0
+fi
+
+if [[ \"\${1:-}\" == \"agent\" ]]; then
+    shift
+fi
+
+case \"\$(basename \"\$CURSOR_COMMAND\")\" in
+    cursor)
+        \"\$CURSOR_COMMAND\" agent \"\$@\"
+        ;;
+    *)
+        \"\$CURSOR_COMMAND\" \"\$@\"
+        ;;
+esac
+exit_code=\$?
+
+if [[ \$exit_code -eq 0 ]]; then
+    \"\$NOTIFY_SCRIPT\" stop cursor \"\$PROJECT_NAME\"
+else
+    \"\$NOTIFY_SCRIPT\" error cursor \"\$PROJECT_NAME\"
+fi
+
+exit \$exit_code"
+    chmod +x "$wrapper"
+}
+
+disable_cursor_hooks() {
+    local wrapper
+    wrapper="$(get_cursor_notify_wrapper)"
+    if is_cursor_wrapper_managed; then
+        rm -f "$wrapper"
+    fi
+}
+
+# ============================================
 # Multi-tool helpers
 # ============================================
 
@@ -1266,6 +1371,9 @@ enable_tool() {
             ;;
         "gemini")
             enable_gemini_hooks
+            ;;
+        "cursor")
+            enable_cursor_hooks
             ;;
         *)
             return 1
@@ -1287,6 +1395,9 @@ disable_tool() {
         "gemini")
             disable_gemini_hooks
             ;;
+        "cursor")
+            disable_cursor_hooks
+            ;;
         *)
             return 1
             ;;
@@ -1306,6 +1417,9 @@ is_tool_enabled() {
             ;;
         "gemini")
             is_gemini_enabled
+            ;;
+        "cursor")
+            is_cursor_enabled
             ;;
         *)
             return 1

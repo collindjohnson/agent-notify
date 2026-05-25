@@ -121,6 +121,26 @@ detect_gemini_cli() {
     return 1
 }
 
+# Detect Cursor Agent installation
+detect_cursor_agent() {
+    if command -v cursor-agent &> /dev/null; then
+        dirname "$(command -v cursor-agent)"
+        return 0
+    fi
+
+    if command -v agent &> /dev/null; then
+        dirname "$(command -v agent)"
+        return 0
+    fi
+
+    if command -v cursor &> /dev/null && cursor agent --help &> /dev/null; then
+        dirname "$(command -v cursor)"
+        return 0
+    fi
+
+    return 1
+}
+
 # Get list of all installed AI coding tools
 get_installed_tools() {
     local tools=()
@@ -135,6 +155,10 @@ get_installed_tools() {
 
     if detect_gemini_cli &> /dev/null; then
         tools+=("gemini")
+    fi
+
+    if detect_cursor_agent &> /dev/null; then
+        tools+=("cursor")
     fi
 
     # Return space-separated list
@@ -154,6 +178,9 @@ is_tool_installed() {
             ;;
         "gemini")
             detect_gemini_cli &> /dev/null
+            ;;
+        "cursor")
+            detect_cursor_agent &> /dev/null
             ;;
         *)
             return 1

@@ -230,6 +230,14 @@ else
     test_fail "Claude event alert hooks failed"
 fi
 
+# Test 24: Cursor Agent wrapper is generated and notifies on exit
+test_start "Cursor Agent wrapper"
+if bash tests/test-cursor-wrapper.sh >/dev/null 2>&1; then
+    test_pass
+else
+    test_fail "Cursor Agent wrapper failed"
+fi
+
 # Summary
 echo ""
 echo "Test Summary:"
