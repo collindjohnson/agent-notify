@@ -13,19 +13,10 @@ Desktop notifications for AI coding tools - get alerts when tasks complete or in
   <img src="assets/multi-tools-support-02.png" width="48%" alt="All tools enabled"/>
 </p>
 
-[![Version](https://img.shields.io/badge/version-1.7.4-blue.svg)](https://github.com/collindjohnson/agent-notify/releases)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![macOS](https://img.shields.io/badge/macOS-supported-green.svg)](https://www.apple.com/macos)
 [![Linux](https://img.shields.io/badge/Linux-supported-green.svg)](https://www.linux.org/)
 [![Windows](https://img.shields.io/badge/Windows-supported-green.svg)](https://www.microsoft.com/windows)
-
----
-
-## What's New in v1.7.4
-
-- **Claude agent/team event alerts**: `an alerts` can now opt into `SubagentStop`, `TeammateIdle`, `TaskCompleted`, and related Claude hook events
-- **Less noisy subagent workflows**: Claude event hooks get their own rate-limit bucket via `AGENT_NOTIFY_EVENT_RATE_LIMIT_SECONDS`
-- **npm package metadata fixed**: npm global install now keeps the `an`, `anp`, and `agent-notify` binaries when published
 
 ---
 
