@@ -49,7 +49,7 @@ ${BOLD}TOOL NAMES:${RESET}
     ${CYAN}claude${RESET}          Claude Code
     ${CYAN}codex${RESET}           OpenAI Codex CLI
     ${CYAN}gemini${RESET}          Google Gemini CLI
-    ${CYAN}cursor${RESET}          Cursor Agent (via cursor-notify wrapper)
+    ${CYAN}cursor${RESET}          Cursor Agent (stop hook + cursor-notify wrapper)
 
 ${BOLD}PROJECT COMMANDS:${RESET}
     ${GREEN}project on${RESET}      Enable for current project
@@ -107,7 +107,7 @@ ${BOLD}EXAMPLES:${RESET}
     an on                   # Enable for all detected tools
     an on all               # Same as an on
     an on claude            # Enable for Claude Code only
-    an on cursor            # Install the cursor-notify wrapper
+    an on cursor            # Install Cursor stop hook and wrapper
     an off                  # Disable all
     an off all              # Same as an off
     an status               # Show status for all tools

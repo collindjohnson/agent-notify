@@ -433,7 +433,7 @@ enable_single_tool() {
         "claude") config_file="$GLOBAL_SETTINGS_FILE" ;;
         "codex") config_file="$CODEX_CONFIG_FILE" ;;
         "gemini") config_file="$GEMINI_SETTINGS_FILE" ;;
-        "cursor") config_file="$(get_cursor_notify_wrapper)" ;;
+        "cursor") config_file="$(get_cursor_hooks_file)" ;;
     esac
 
     success "$tool: ENABLED"
@@ -578,11 +578,12 @@ show_status() {
     if is_tool_installed "cursor"; then
         if is_tool_enabled "cursor"; then
             echo "  ${CHECK_MARK} Cursor Agent: ${GREEN}ENABLED${RESET}"
+            echo "     Hooks: $(get_cursor_hooks_file)"
             echo "     Wrapper: $(get_cursor_notify_wrapper)"
             echo "     Usage: cursor-notify [cursor agent options] [prompt...]"
         else
             echo "  ${MUTE} Cursor Agent: ${DIM}DISABLED${RESET}"
-            echo "     Run: ${CYAN}an on cursor${RESET} to install the cursor-notify wrapper"
+            echo "     Run: ${CYAN}an on cursor${RESET} to install the Cursor stop hook and wrapper"
         fi
     else
         echo "  ${DIM}- Cursor Agent: not installed${RESET}"

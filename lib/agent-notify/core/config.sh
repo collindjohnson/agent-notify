@@ -54,6 +54,10 @@ GEMINI_HOME="${GEMINI_HOME:-$HOME/.gemini}"
 GEMINI_SETTINGS_FILE="$GEMINI_HOME/settings.json"
 
 # Cursor Agent wrapper path
+CURSOR_HOME="${CURSOR_HOME:-$HOME/.cursor}"
+CURSOR_HOOKS_FILE="${CURSOR_HOOKS_FILE:-$CURSOR_HOME/hooks.json}"
+CURSOR_HOOKS_DIR="${CURSOR_HOOKS_DIR:-$CURSOR_HOME/hooks}"
+CURSOR_NOTIFY_HOOK_SCRIPT="${CURSOR_NOTIFY_HOOK_SCRIPT:-$CURSOR_HOOKS_DIR/agent-notify-stop.sh}"
 CURSOR_NOTIFY_WRAPPER="${CURSOR_NOTIFY_WRAPPER:-$HOME/.local/bin/cursor-notify}"
 
 # Ensure config directory exists
@@ -574,6 +578,14 @@ get_notify_script() {
 
 get_cursor_notify_wrapper() {
     printf '%s\n' "$CURSOR_NOTIFY_WRAPPER"
+}
+
+get_cursor_hooks_file() {
+    printf '%s\n' "$CURSOR_HOOKS_FILE"
+}
+
+get_cursor_notify_hook_script() {
+    printf '%s\n' "$CURSOR_NOTIFY_HOOK_SCRIPT"
 }
 
 # Validate hooks file format
@@ -1279,19 +1291,101 @@ is_cursor_wrapper_managed() {
 }
 
 is_cursor_enabled() {
-    local wrapper
+    local wrapper hooks_file hook_script
     wrapper="$(get_cursor_notify_wrapper)"
-    [[ -x "$wrapper" ]] && is_cursor_wrapper_managed
+    hooks_file="$(get_cursor_hooks_file)"
+    hook_script="$(get_cursor_notify_hook_script)"
+
+    [[ -x "$wrapper" ]] && is_cursor_wrapper_managed &&
+        [[ -x "$hook_script" ]] &&
+        [[ -f "$hooks_file" ]] &&
+        grep -q "agent-notify-stop.sh" "$hooks_file" 2>/dev/null
+}
+
+update_cursor_hooks_file() {
+    local file="$1"
+    local command="$2"
+    local mode="$3"
+    local tmp_json
+
+    mkdir -p "$(dirname "$file")"
+
+    if [[ -f "$file" ]]; then
+        backup_config "$file"
+    fi
+
+    tmp_json=$(mktemp "$(dirname "$file")/.tmp.XXXXXX") || return 1
+
+    if has_python3; then
+        python3 - "$file" "$command" "$mode" "$tmp_json" <<'PYTHON'
+import json
+import os
+import sys
+
+file_path, command, mode, tmp_path = sys.argv[1:5]
+
+try:
+    with open(file_path, "r", encoding="utf-8") as handle:
+        settings = json.load(handle)
+except FileNotFoundError:
+    settings = {}
+except Exception:
+    settings = {}
+
+if not isinstance(settings, dict):
+    settings = {}
+
+settings["version"] = settings.get("version", 1)
+hooks = settings.get("hooks")
+if not isinstance(hooks, dict):
+    hooks = {}
+
+stop_hooks = hooks.get("stop")
+if not isinstance(stop_hooks, list):
+    stop_hooks = []
+
+def is_managed(entry):
+    return isinstance(entry, dict) and entry.get("command") == command
+
+stop_hooks = [entry for entry in stop_hooks if not is_managed(entry)]
+
+if mode == "enable":
+    stop_hooks.append({"command": command})
+
+if stop_hooks:
+    hooks["stop"] = stop_hooks
+else:
+    hooks.pop("stop", None)
+
+if hooks:
+    settings["hooks"] = hooks
+else:
+    settings.pop("hooks", None)
+
+with open(tmp_path, "w", encoding="utf-8") as handle:
+    json.dump(settings, handle, indent=2)
+    handle.write("\n")
+
+os.replace(tmp_path, file_path)
+PYTHON
+        return $?
+    fi
+
+    rm -f "$tmp_json"
+    echo "Error: python3 required to safely update Cursor hooks" >&2
+    return 1
 }
 
 enable_cursor_hooks() {
-    local wrapper notify_script cursor_command wrapper_dir
+    local wrapper notify_script cursor_command wrapper_dir hook_script hook_command hooks_file
     wrapper="$(get_cursor_notify_wrapper)"
     notify_script="$(get_notify_script)"
     cursor_command="$(get_cursor_command)" || return 1
     wrapper_dir="$(dirname "$wrapper")"
+    hook_script="$(get_cursor_notify_hook_script)"
+    hooks_file="$(get_cursor_hooks_file)"
 
-    mkdir -p "$wrapper_dir"
+    mkdir -p "$wrapper_dir" "$(dirname "$hook_script")"
 
     if [[ -e "$wrapper" ]] && ! is_cursor_wrapper_managed; then
         backup_config "$wrapper" || true
@@ -1304,6 +1398,10 @@ set -u
 NOTIFY_SCRIPT=\"$(toml_escape_string "$notify_script")\"
 CURSOR_COMMAND=\"$(toml_escape_string "$cursor_command")\"
 PROJECT_NAME=\"\${CURSOR_NOTIFY_PROJECT:-\$(basename \"\$PWD\")}\"
+
+if [[ \"\${1:-}\" == \"agent\" ]]; then
+    shift
+fi
 
 if [[ \"\${1:-}\" == \"--test\" ]]; then
     \"\$NOTIFY_SCRIPT\" test cursor \"\$PROJECT_NAME\"
@@ -1322,9 +1420,15 @@ EOF
     exit 0
 fi
 
-if [[ \"\${1:-}\" == \"agent\" ]]; then
-    shift
-fi
+SEND_EXIT_NOTIFICATION=\"\${CURSOR_NOTIFY_ON_EXIT:-0}\"
+for arg in \"\$@\"; do
+    case \"\$arg\" in
+        -p|--print)
+            SEND_EXIT_NOTIFICATION=1
+            break
+            ;;
+    esac
+done
 
 case \"\$(basename \"\$CURSOR_COMMAND\")\" in
     cursor)
@@ -1336,21 +1440,55 @@ case \"\$(basename \"\$CURSOR_COMMAND\")\" in
 esac
 exit_code=\$?
 
-if [[ \$exit_code -eq 0 ]]; then
-    \"\$NOTIFY_SCRIPT\" stop cursor \"\$PROJECT_NAME\"
-else
-    \"\$NOTIFY_SCRIPT\" error cursor \"\$PROJECT_NAME\"
+if [[ \"\$SEND_EXIT_NOTIFICATION\" == \"1\" ]]; then
+    if [[ \$exit_code -eq 0 ]]; then
+        \"\$NOTIFY_SCRIPT\" stop cursor \"\$PROJECT_NAME\"
+    else
+        \"\$NOTIFY_SCRIPT\" error cursor \"\$PROJECT_NAME\"
+    fi
 fi
 
 exit \$exit_code"
     chmod +x "$wrapper"
+
+    if [[ -e "$hook_script" ]] && ! grep -q "Agent-Notify Cursor stop hook" "$hook_script" 2>/dev/null; then
+        backup_config "$hook_script" || true
+    fi
+
+    atomic_write "$hook_script" "#!/bin/bash
+# Agent-Notify Cursor stop hook
+set -u
+
+NOTIFY_SCRIPT=\"$(toml_escape_string "$notify_script")\"
+PROJECT_NAME=\"\$(basename \"\${PWD:-\$HOME}\")\"
+
+\"\$NOTIFY_SCRIPT\" stop cursor \"\$PROJECT_NAME\" >/dev/null 2>&1 || true
+
+# Cursor hooks expect JSON on stdout.
+printf '{}\\n'"
+    chmod +x "$hook_script"
+
+    hook_command="$(shell_quote "$hook_script")"
+    update_cursor_hooks_file "$hooks_file" "$hook_command" "enable"
 }
 
 disable_cursor_hooks() {
-    local wrapper
+    local wrapper hook_script hooks_file hook_command
     wrapper="$(get_cursor_notify_wrapper)"
+    hook_script="$(get_cursor_notify_hook_script)"
+    hooks_file="$(get_cursor_hooks_file)"
+
     if is_cursor_wrapper_managed; then
         rm -f "$wrapper"
+    fi
+
+    if [[ -f "$hooks_file" ]]; then
+        hook_command="$(shell_quote "$hook_script")"
+        update_cursor_hooks_file "$hooks_file" "$hook_command" "disable" || true
+    fi
+
+    if [[ -f "$hook_script" ]] && grep -q "Agent-Notify Cursor stop hook" "$hook_script" 2>/dev/null; then
+        rm -f "$hook_script"
     fi
 }
 

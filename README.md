@@ -92,7 +92,7 @@ curl -s https://raw.githubusercontent.com/collindjohnson/agent-notify/main/docs/
 | `an on claude`       | Enable for Claude Code only                  |
 | `an on codex`        | Enable for Codex only                        |
 | `an on gemini`       | Enable for Gemini CLI only                   |
-| `an on cursor`       | Install the Cursor Agent notification wrapper |
+| `an on cursor`       | Install Cursor Agent stop hook and CLI wrapper |
 | `an off`             | Disable notifications                        |
 | `an off all`         | Explicit alias for disabling all tools       |
 | `an test`            | Send test notification                       |
@@ -119,12 +119,12 @@ Agent-Notify uses the hook systems built into AI coding tools:
 - **Claude Code**: `~/.claude/settings.json`
 - **Codex**: `~/.codex/config.toml`
 - **Gemini CLI**: `~/.gemini/settings.json`
-- **Cursor Agent**: `~/.local/bin/cursor-notify` wrapper
+- **Cursor Agent**: `~/.cursor/hooks.json` `stop` hook plus `~/.local/bin/cursor-notify` wrapper
 
 For Codex, Agent-Notify configures `notify = ["/absolute/path/to/notifier.sh", "codex"]` and reads the JSON payload Codex appends on completion.
 Codex currently exposes completion events through `notify`; approval and `request_permissions` prompts do not currently arrive through this hook.
 
-Cursor Agent does not currently expose a hook configuration file. `an on cursor` installs a `cursor-notify` wrapper that runs Cursor Agent and sends a Agent-Notify completion or error notification when the process exits:
+Cursor Agent task-completion notifications use Cursor's `stop` hook in `~/.cursor/hooks.json`. `an on cursor` also installs a `cursor-notify` wrapper for launching Cursor Agent from terminals and for one-shot `--print` runs:
 
 ```sh
 cursor-notify "your prompt"
