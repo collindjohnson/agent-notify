@@ -8,11 +8,6 @@
 
 Desktop notifications for AI coding tools - get alerts when tasks complete or input is needed.
 
-<p>
-  <img src="assets/multi-tools-support.png" width="48%" alt="Multi-tool support"/>
-  <img src="assets/multi-tools-support-02.png" width="48%" alt="All tools enabled"/>
-</p>
-
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![macOS](https://img.shields.io/badge/macOS-supported-green.svg)](https://www.apple.com/macos)
 [![Linux](https://img.shields.io/badge/Linux-supported-green.svg)](https://www.linux.org/)
@@ -169,8 +164,6 @@ When enabled, it adds hooks that call the notification script when tasks complet
 ```
 
 ### Alert Types
-
-<img src="assets/an-status-v1.4.0.png" width="60%" alt="an status showing alert types"/>
 
 By default, notifications only fire when the AI is idle and waiting for input (`idle_prompt`). You can customize this:
 
