@@ -117,9 +117,7 @@ rm -rf ~/.claude/notifications
 ### macOS (Homebrew) - Recommended
 
 ```bash
-brew tap collindjohnson/tools
-brew install agent-notify
-an on
+brew tap collindjohnson/agent-notify https://github.com/collindjohnson/agent-notify && brew install agent-notify && an on
 ```
 
 ### Linux / WSL
