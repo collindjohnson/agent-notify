@@ -7,6 +7,10 @@
 > **npm**: `npm install -g https://github.com/collindjohnson/agent-notify/archive/refs/heads/main.tar.gz`
 
 Desktop notifications for AI coding tools - get alerts when tasks complete or input is needed.
+ 
+ <br>
+<img width="746" height="186" alt="CleanShot 2026-05-25 at 13 00 03@2x" src="https://github.com/user-attachments/assets/d3e39eca-31f3-43de-984d-d0b400d35573" />
+ <br><br>
 
 Agent-Notify is a fork of [mylee04/code-notify](https://github.com/mylee04/code-notify), originally created by [mylee04](https://github.com/mylee04).
 
@@ -84,7 +88,10 @@ curl -s https://raw.githubusercontent.com/collindjohnson/agent-notify/main/docs/
 ```
 
 ## Usage
-
+ <br>
+<img width="1160" height="516" alt="CleanShot 2026-05-25 at 12 56 11@2x" src="https://github.com/user-attachments/assets/cff2c1b2-af39-4c61-9c2e-763cc1ed64c2" />
+ <br><br>
+ 
 | Command              | Description                                  |
 | -------------------- | -------------------------------------------- |
 | `an on`              | Enable notifications for all detected tools  |
@@ -174,7 +181,10 @@ an alerts add SubagentStop         # Also notify when Claude subagents finish
 an alerts remove permission_prompt # Remove permission notifications
 an alerts reset                    # Back to default (idle_prompt only)
 ```
-
+ <br>
+<img width="1408" height="318" alt="CleanShot 2026-05-25 at 13 03 49@2x" src="https://github.com/user-attachments/assets/7dfc7c4f-8c67-4a56-b65a-03f4742f9f4f" />
+ <br><br>
+ 
 | Type                 | Description                                    |
 | -------------------- | ---------------------------------------------- |
 | `idle_prompt`        | AI is waiting for your input (default)         |
