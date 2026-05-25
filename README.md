@@ -8,7 +8,7 @@
 
 Desktop notifications for AI coding tools - get alerts when tasks complete or input is needed.
 
-Agent-Notify is a fork of [mylee04/code-notify](https://github.com/mylee04/code-notify), originally created by [mylee04](https://github.com/mylee04). This fork adds Cursor Agent support and renames the CLI aliases to `an` and `anp`.
+Agent-Notify is a fork of [mylee04/code-notify](https://github.com/mylee04/code-notify), originally created by [mylee04](https://github.com/mylee04).
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![macOS](https://img.shields.io/badge/macOS-supported-green.svg)](https://www.apple.com/macos)
