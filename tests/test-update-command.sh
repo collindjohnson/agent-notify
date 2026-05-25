@@ -34,7 +34,7 @@ script_command=$(get_update_command "script")
 pass "uses the correct install script URL"
 
 npm_command=$(get_update_command "npm")
-[[ "$npm_command" == "npm install -g github:collindjohnson/agent-notify" ]] || fail "unexpected npm update command"
+[[ "$npm_command" == "npm install -g https://github.com/collindjohnson/agent-notify/archive/refs/heads/main.tar.gz" ]] || fail "unexpected npm update command"
 pass "uses the correct npm update command"
 
 homebrew_command=$(get_update_command "homebrew")
@@ -68,7 +68,7 @@ pass "update check reports when script installs are behind the latest release"
 
 npm_check_output=$(AGENT_NOTIFY_INSTALL_METHOD="npm" AGENT_NOTIFY_LATEST_VERSION="$VERSION" "$SCRIPT_DIR/../bin/agent-notify" update check 2>&1)
 echo "$npm_check_output" | grep -q "Install method: npm" || fail "expected npm update check to report the npm install method"
-echo "$npm_check_output" | grep -q "npm install -g github:collindjohnson/agent-notify" || fail "expected npm update check to show the npm update command"
+echo "$npm_check_output" | grep -q "npm install -g https://github.com/collindjohnson/agent-notify/archive/refs/heads/main.tar.gz" || fail "expected npm update check to show the npm update command"
 pass "update check reports npm update guidance"
 
 noop_update_output=$(AGENT_NOTIFY_INSTALL_METHOD="script" AGENT_NOTIFY_LATEST_VERSION="$VERSION" "$SCRIPT_DIR/../bin/agent-notify" update 2>&1)

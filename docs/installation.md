@@ -131,7 +131,7 @@ an on
 ### npm (macOS / Linux / Windows)
 
 ```bash
-npm install -g github:collindjohnson/agent-notify
+npm install -g https://github.com/collindjohnson/agent-notify/archive/refs/heads/main.tar.gz
 an on
 ```
 

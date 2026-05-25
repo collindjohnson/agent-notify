@@ -196,7 +196,7 @@ get_update_command() {
             echo "brew update && brew upgrade agent-notify"
             ;;
         "npm")
-            echo "npm install -g github:collindjohnson/agent-notify"
+            echo "npm install -g https://github.com/collindjohnson/agent-notify/archive/refs/heads/main.tar.gz"
             ;;
         "script")
             echo "curl -fsSL https://raw.githubusercontent.com/collindjohnson/agent-notify/main/scripts/install.sh | bash"
@@ -216,7 +216,7 @@ run_update_for_method() {
             brew update && brew upgrade agent-notify
             ;;
         "npm")
-            npm install -g github:collindjohnson/agent-notify
+            npm install -g https://github.com/collindjohnson/agent-notify/archive/refs/heads/main.tar.gz
             ;;
         "script")
             curl -fsSL https://raw.githubusercontent.com/collindjohnson/agent-notify/main/scripts/install.sh | bash
