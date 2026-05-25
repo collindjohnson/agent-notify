@@ -270,7 +270,7 @@ list_linux_sounds() {
 
     if [[ $found -eq 0 ]]; then
         echo "No system sounds found"
-        echo "You can use custom sound files with: cn sound set <path>"
+        echo "You can use custom sound files with: an sound set <path>"
     fi
 }
 

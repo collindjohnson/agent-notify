@@ -322,7 +322,7 @@ init_project_interactive() {
         info "Setup cancelled"
         echo ""
         echo "You can enable later with:"
-        echo "  ${CYAN}cnp on${RESET}"
+        echo "  ${CYAN}anp on${RESET}"
     fi
 }
 

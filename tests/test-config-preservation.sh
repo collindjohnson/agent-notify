@@ -1,6 +1,6 @@
 #!/bin/bash
 # Test script for config preservation bug fix
-# Verifies that cn on/off preserves user's existing settings
+# Verifies that an on/off preserves user's existing settings
 # Tests both jq path and Python fallback path
 
 set -e

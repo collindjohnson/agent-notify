@@ -31,11 +31,11 @@ run_enable_all_alias_test() {
         }
         test_notification() { return 0; }
 
-        enable_notifications_global all >/dev/null 2>&1 || fail "cn on all alias did not enable notifications"
+        enable_notifications_global all >/dev/null 2>&1 || fail "an on all alias did not enable notifications"
 
         local enabled_tools
         enabled_tools="$(sort "$HOME/enabled-tools" | tr '\n' ' ')"
-        [[ "$enabled_tools" == "claude codex cursor gemini " ]] || fail "cn on all did not enable every detected tool"
+        [[ "$enabled_tools" == "claude codex cursor gemini " ]] || fail "an on all did not enable every detected tool"
     )
 
     rm -rf "$test_dir"
@@ -62,11 +62,11 @@ run_disable_all_alias_test() {
             return 0
         }
 
-        disable_notifications_global all >/dev/null 2>&1 || fail "cn off all alias did not disable notifications"
+        disable_notifications_global all >/dev/null 2>&1 || fail "an off all alias did not disable notifications"
 
         local disabled_tools
         disabled_tools="$(sort "$HOME/disabled-tools" | tr '\n' ' ')"
-        [[ "$disabled_tools" == "claude codex cursor gemini " ]] || fail "cn off all did not disable every enabled tool"
+        [[ "$disabled_tools" == "claude codex cursor gemini " ]] || fail "an off all did not disable every enabled tool"
     )
 
     rm -rf "$test_dir"
@@ -94,17 +94,17 @@ run_status_all_alias_test() {
         get_notify_types() { echo "idle_prompt"; }
         detect_os() { echo "linux"; }
 
-        show_status all >/dev/null 2>&1 || fail "cn status all alias did not behave like cn status"
+        show_status all >/dev/null 2>&1 || fail "an status all alias did not behave like an status"
     )
 
     rm -rf "$test_dir"
 }
 
 run_enable_all_alias_test
-pass "cn on all enables all detected tools"
+pass "an on all enables all detected tools"
 
 run_disable_all_alias_test
-pass "cn off all disables all tools"
+pass "an off all disables all tools"
 
 run_status_all_alias_test
-pass "cn status all behaves like the global status command"
+pass "an status all behaves like the global status command"

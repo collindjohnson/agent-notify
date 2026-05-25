@@ -13,16 +13,16 @@ install:
 	@chmod +x bin/code-notify
 	@mkdir -p $(HOME)/.local/bin
 	@ln -sf $(PWD)/bin/code-notify $(HOME)/.local/bin/code-notify
-	@ln -sf $(PWD)/bin/code-notify $(HOME)/.local/bin/cn
-	@ln -sf $(PWD)/bin/code-notify $(HOME)/.local/bin/cnp
+	@ln -sf $(PWD)/bin/code-notify $(HOME)/.local/bin/an
+	@ln -sf $(PWD)/bin/code-notify $(HOME)/.local/bin/anp
 	@echo "Installed. Make sure $(HOME)/.local/bin is in your PATH"
 
 # Uninstall local installation
 uninstall:
 	@echo "Removing local installation..."
 	@rm -f $(HOME)/.local/bin/code-notify
-	@rm -f $(HOME)/.local/bin/cn
-	@rm -f $(HOME)/.local/bin/cnp
+	@rm -f $(HOME)/.local/bin/an
+	@rm -f $(HOME)/.local/bin/anp
 	@echo "Uninstalled."
 
 # Clean up backup files and caches

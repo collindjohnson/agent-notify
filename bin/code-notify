@@ -39,8 +39,8 @@ show_main_help() {
 
 # Route commands based on how script was called
 case "$COMMAND_NAME" in
-    "cn")
-        # Called as 'cn' - handle global commands directly
+    "an")
+        # Called as 'an' - handle global commands directly
         case "${1:-status}" in
             "help"|"-h"|"--help")
                 show_main_help
@@ -53,7 +53,7 @@ case "$COMMAND_NAME" in
                 handle_global_command "$@"
                 ;;
             "click-through")
-                [[ "$(uname -s)" != "Darwin" ]] && { error "Unknown command: $1"; echo "Try 'cn help' for usage"; exit 1; }
+                [[ "$(uname -s)" != "Darwin" ]] && { error "Unknown command: $1"; echo "Try 'an help' for usage"; exit 1; }
                 source "$LIB_DIR/commands/global.sh"
                 handle_global_command "$@"
                 ;;
@@ -63,14 +63,14 @@ case "$COMMAND_NAME" in
                 ;;
             *)
                 error "Unknown command: $1"
-                echo "Try 'cn help' for usage"
+                echo "Try 'an help' for usage"
                 exit 1
                 ;;
         esac
         ;;
     
-    "cnp")
-        # Called as 'cnp' - handle project commands directly
+    "anp")
+        # Called as 'anp' - handle project commands directly
         source "$LIB_DIR/commands/project.sh"
         handle_project_command "$@"
         ;;

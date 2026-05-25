@@ -9,7 +9,7 @@ is_macos_help_context() {
 # Show help message
 # Usage: show_help [command_name]
 show_help() {
-    local cmd_name="${1:-cn}"
+    local cmd_name="${1:-an}"
     cat << EOF
 ${BOLD}Code-Notify${RESET} - Desktop notifications for AI coding tools
 
@@ -100,38 +100,38 @@ EOF
     cat << EOF
 
 ${BOLD}ALIASES:${RESET}
-    ${CYAN}cn${RESET}  <command>   Main command
-    ${CYAN}cnp${RESET} <command>   Shortcut for project commands
+    ${CYAN}an${RESET}  <command>   Main command
+    ${CYAN}anp${RESET} <command>   Shortcut for project commands
 
 ${BOLD}EXAMPLES:${RESET}
-    cn on                   # Enable for all detected tools
-    cn on all               # Same as cn on
-    cn on claude            # Enable for Claude Code only
-    cn on cursor            # Install the cursor-notify wrapper
-    cn off                  # Disable all
-    cn off all              # Same as cn off
-    cn status               # Show status for all tools
-    cn status all           # Same as cn status
-    cn test                 # Send test notification
-    cn update check         # Check whether an update is needed and show the update command
-    cn alerts               # Show alert type config
-    cn alerts add permission_prompt  # Also notify on permission requests
-    cn alerts add SubagentStop       # Also notify when Claude subagents finish
-    cn alerts reset         # Back to idle_prompt only (less noisy)
-    cn sound on             # Enable notification sounds
-    cn sound set ~/ding.wav # Use custom sound
+    an on                   # Enable for all detected tools
+    an on all               # Same as an on
+    an on claude            # Enable for Claude Code only
+    an on cursor            # Install the cursor-notify wrapper
+    an off                  # Disable all
+    an off all              # Same as an off
+    an status               # Show status for all tools
+    an status all           # Same as an status
+    an test                 # Send test notification
+    an update check         # Check whether an update is needed and show the update command
+    an alerts               # Show alert type config
+    an alerts add permission_prompt  # Also notify on permission requests
+    an alerts add SubagentStop       # Also notify when Claude subagents finish
+    an alerts reset         # Back to idle_prompt only (less noisy)
+    an sound on             # Enable notification sounds
+    an sound set ~/ding.wav # Use custom sound
 EOF
 
     if is_macos_help_context; then
         cat << EOF
-    cn click-through        # Show current click-through mappings
-    cn click-through add    # Add an app mapping
-    cn click-through remove # Interactively remove mappings
+    an click-through        # Show current click-through mappings
+    an click-through add    # Add an app mapping
+    an click-through remove # Interactively remove mappings
 EOF
     fi
 
     cat << EOF
-    cnp on                  # Enable for current project
+    anp on                  # Enable for current project
 
 ${BOLD}MORE INFO:${RESET}
     ${DIM}https://github.com/mylee04/code-notify${RESET}

@@ -69,8 +69,8 @@ else
     test_fail "missing library files"
 fi
 
-# Test 5: Command routing (cn alias simulation)
-test_start "cn command routing"
+# Test 5: Command routing (an alias simulation)
+test_start "an command routing"
 if CN_TEST=1 ./bin/code-notify help 2>&1 | grep -q "Code-Notify"; then
     test_pass
 else
@@ -136,7 +136,7 @@ fi
 
 # Test 12: npm launchers can route to the shell runtime
 test_start "npm launcher routing"
-if node ./bin/npm-cn.js version 2>&1 | grep -q "code-notify version"; then
+if node ./bin/npm-an.js version 2>&1 | grep -q "code-notify version"; then
     test_pass
 else
     test_fail "npm launcher version command failed"

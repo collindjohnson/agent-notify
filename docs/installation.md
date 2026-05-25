@@ -30,10 +30,10 @@ chmod +x /tmp/code-notify/scripts/install.sh
 exec $SHELL
 
 # 4. Enable notifications
-cn on
+an on
 
 # 5. Test it works
-cn test
+an test
 
 # 6. Clean up
 rm -rf /tmp/code-notify
@@ -44,16 +44,16 @@ rm -rf /tmp/code-notify
 After installation, confirm these work:
 
 ```bash
-cn version    # Should show: code-notify version X.X.X
-cn status     # Should show: Global notifications: ENABLED
-cn test       # Should trigger a desktop notification
+an version    # Should show: code-notify version X.X.X
+an status     # Should show: Global notifications: ENABLED
+an test       # Should trigger a desktop notification
 ```
 
 ### Enable Voice (macOS only)
 
 ```bash
-cn voice on   # Follow prompts to select a voice
-cn test       # Should hear + see notification
+an voice on   # Follow prompts to select a voice
+an test       # Should hear + see notification
 ```
 
 ### Project-Specific Setup
@@ -62,15 +62,15 @@ To enable notifications for a specific project only:
 
 ```bash
 cd /path/to/your/project
-cnp on        # Enable for this project
-cnp status    # Verify
+anp on        # Enable for this project
+anp status    # Verify
 ```
 
-If Claude Code has not trusted the project yet, `cnp on` will warn that Claude may ignore project settings until the trust prompt is accepted.
+If Claude Code has not trusted the project yet, `anp on` will warn that Claude may ignore project settings until the trust prompt is accepted.
 
 ### Troubleshooting
 
-If `cn` command not found:
+If `an` command not found:
 
 ```bash
 # Add to PATH
@@ -86,7 +86,7 @@ If notifications don't appear:
 brew install terminal-notifier
 
 # Check status
-cn status
+an status
 ```
 
 ### Configuration Files
@@ -102,11 +102,11 @@ After installation, these files are created:
 
 ```bash
 # Disable notifications first
-cn off
+an off
 
 # Remove installation
 rm -rf ~/.code-notify
-rm -f ~/.local/bin/cn ~/.local/bin/cnp ~/.local/bin/code-notify
+rm -f ~/.local/bin/an ~/.local/bin/anp ~/.local/bin/code-notify
 rm -rf ~/.claude/notifications
 ```
 
@@ -119,7 +119,7 @@ rm -rf ~/.claude/notifications
 ```bash
 brew tap mylee04/tools
 brew install code-notify
-cn on
+an on
 ```
 
 ### Linux / WSL
@@ -127,14 +127,14 @@ cn on
 ```bash
 curl -sSL https://raw.githubusercontent.com/mylee04/code-notify/main/scripts/install.sh | bash
 exec $SHELL
-cn on
+an on
 ```
 
 ### npm (macOS / Linux / Windows)
 
 ```bash
 npm install -g code-notify
-cn on
+an on
 ```
 
 ### macOS Embedded Terminals
@@ -142,8 +142,8 @@ cn on
 If clicking a notification opens `Terminal.app` instead of your editor or IDE terminal, add a click-through mapping:
 
 ```bash
-cn click-through add PhpStorm
-cn test
+an click-through add PhpStorm
+an test
 ```
 
 ### Manual Installation
@@ -158,13 +158,13 @@ cd code-notify
 
 | Command       | What it does                    |
 | ------------- | ------------------------------- |
-| `cn on`       | Enable notifications            |
-| `cn off`      | Disable notifications           |
-| `cn test`     | Send test notification          |
-| `cn status`   | Check current status            |
-| `cn update`   | Update code-notify              |
-| `cn update check` | Check the latest release and show the update command |
-| `cn voice on` | Enable voice (macOS)            |
-| `cnp on`      | Enable for current project only |
+| `an on`       | Enable notifications            |
+| `an off`      | Disable notifications           |
+| `an test`     | Send test notification          |
+| `an status`   | Check current status            |
+| `an update`   | Update code-notify              |
+| `an update check` | Check the latest release and show the update command |
+| `an voice on` | Enable voice (macOS)            |
+| `anp on`      | Enable for current project only |
 
 That's it! You'll now get notified when Claude Code completes tasks.

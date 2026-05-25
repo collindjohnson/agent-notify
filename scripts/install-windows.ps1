@@ -432,8 +432,8 @@ function Set-CustomSound {
     if (-not $SoundPath) {
         Write-Host "[X] Please provide a path to a sound file" -ForegroundColor Red
         Write-Host ""
-        Write-Host "Usage: cn sound set <path>" -ForegroundColor Gray
-        Write-Host "Example: cn sound set C:\sounds\notification.wav" -ForegroundColor Gray
+        Write-Host "Usage: an sound set <path>" -ForegroundColor Gray
+        Write-Host "Example: an sound set C:\sounds\notification.wav" -ForegroundColor Gray
         return
     }
 
@@ -484,7 +484,7 @@ function Test-Sound {
         Write-Success "Sound played!"
     } else {
         Write-Warning "Sound is disabled"
-        Write-Info "Enable with: cn sound on"
+        Write-Info "Enable with: an sound on"
     }
 }
 
@@ -522,12 +522,12 @@ function Show-SoundStatus {
 
     Write-Host ""
     Write-Host "Commands:" -ForegroundColor White
-    Write-Host "  cn sound on              Enable with default system sound" -ForegroundColor Gray
-    Write-Host "  cn sound off             Disable sound notifications" -ForegroundColor Gray
-    Write-Host "  cn sound set <path>      Use custom sound file" -ForegroundColor Gray
-    Write-Host "  cn sound default         Reset to system default" -ForegroundColor Gray
-    Write-Host "  cn sound test            Play current sound" -ForegroundColor Gray
-    Write-Host "  cn sound list            Show available system sounds" -ForegroundColor Gray
+    Write-Host "  an sound on              Enable with default system sound" -ForegroundColor Gray
+    Write-Host "  an sound off             Disable sound notifications" -ForegroundColor Gray
+    Write-Host "  an sound set <path>      Use custom sound file" -ForegroundColor Gray
+    Write-Host "  an sound default         Reset to system default" -ForegroundColor Gray
+    Write-Host "  an sound test            Play current sound" -ForegroundColor Gray
+    Write-Host "  an sound list            Show available system sounds" -ForegroundColor Gray
 }
 
 function Get-NotifyScript {
@@ -1436,8 +1436,8 @@ Code-Notify - Native Windows notifications for Claude Code, Codex, and Gemini CL
 
 USAGE:
     code-notify <command> [options]
-    cn <command>              # Short alias
-    cnp <command>             # Project command alias
+    an <command>              # Short alias
+    anp <command>             # Project command alias
 
 COMMANDS:
     on [tool|all]   Enable notifications globally or for a specific tool
@@ -1465,22 +1465,22 @@ SOUND COMMANDS:
     sound status    Show sound configuration
 
 PROJECT COMMANDS:
-    project on      Enable for current project (Claude project hooks) (or: cnp on)
-    project off     Disable for current project (Claude project hooks) (or: cnp off)
-    project status  Check project status (Claude project hooks) (or: cnp status)
-    project voice   Set project-specific voice (or: cnp voice)
+    project on      Enable for current project (Claude project hooks) (or: anp on)
+    project off     Disable for current project (Claude project hooks) (or: anp off)
+    project status  Check project status (Claude project hooks) (or: anp status)
+    project voice   Set project-specific voice (or: anp voice)
 
 EXAMPLES:
     code-notify on            # Enable Claude notifications
-    cn on all                 # Enable all detected tools
-    cn on codex               # Enable Codex notifications
-    cn off all                # Disable all tools
-    cn off gemini             # Disable Gemini notifications
-    cnp on                    # Enable Claude project notifications
-    cn test                   # Send test notification
-    cn update check           # Check whether an update is needed and show the update command
-    cn sound on               # Enable notification sounds
-    cn sound set C:\sounds\ding.wav  # Use custom sound
+    an on all                 # Enable all detected tools
+    an on codex               # Enable Codex notifications
+    an off all                # Disable all tools
+    an off gemini             # Disable Gemini notifications
+    anp on                    # Enable Claude project notifications
+    an test                   # Send test notification
+    an update check           # Check whether an update is needed and show the update command
+    an sound on               # Enable notification sounds
+    an sound set C:\sounds\ding.wav  # Use custom sound
 
 MORE INFO:
     https://github.com/mylee04/code-notify
@@ -2176,9 +2176,9 @@ if ($requestedVersionShortcut) {
 
     $cliWrapper | Set-Content "$InstallDir\bin\code-notify.ps1" -Encoding UTF8
 
-    # Create cn alias
-    $cnWrapper = @'
-# cn - Code-Notify shortcut
+    # Create an alias
+    $anWrapper = @'
+# an - Code-Notify shortcut
 param([Parameter(ValueFromRemainingArguments)][string[]]$Args)
 $requestedVersionShortcut = $false
 $invocationLine = [string]$MyInvocation.Line
@@ -2196,16 +2196,16 @@ if ($requestedVersionShortcut) {
     Invoke-CodeNotify @Args
 }
 '@
-    $cnWrapper | Set-Content "$InstallDir\bin\cn.ps1" -Encoding UTF8
+    $anWrapper | Set-Content "$InstallDir\bin\an.ps1" -Encoding UTF8
 
-    # Create cnp alias (project commands)
-    $cnpWrapper = @'
-# cnp - Code-Notify Project shortcut
+    # Create anp alias (project commands)
+    $anpWrapper = @'
+# anp - Code-Notify Project shortcut
 param([Parameter(ValueFromRemainingArguments)][string[]]$Args)
 Import-Module "$env:USERPROFILE\.code-notify\lib\CodeNotify.psm1" -Force -Verbose:$false
 Invoke-CodeNotify "project" @Args
 '@
-    $cnpWrapper | Set-Content "$InstallDir\bin\cnp.ps1" -Encoding UTF8
+    $anpWrapper | Set-Content "$InstallDir\bin\anp.ps1" -Encoding UTF8
 
     Write-Success "Created CLI wrappers"
 }
@@ -2241,8 +2241,8 @@ function Add-PowerShellProfile {
 
 # Code-Notify aliases (added by installer)
 Set-Alias -Name code-notify -Value "$InstallDir\bin\code-notify.ps1"
-Set-Alias -Name cn -Value "$InstallDir\bin\cn.ps1"
-Set-Alias -Name cnp -Value "$InstallDir\bin\cnp.ps1"
+Set-Alias -Name an -Value "$InstallDir\bin\an.ps1"
+Set-Alias -Name anp -Value "$InstallDir\bin\anp.ps1"
 # End Code-Notify aliases
 
 "@
@@ -2304,15 +2304,15 @@ function Show-PostInstall {
     Write-Host "Quick Start:" -ForegroundColor White
     Write-Host "  1. Restart your terminal (or run: refreshenv)" -ForegroundColor Gray
     Write-Host "  2. Enable notifications:" -ForegroundColor Gray
-    Write-Host "     cn on" -ForegroundColor Cyan
+    Write-Host "     an on" -ForegroundColor Cyan
     Write-Host ""
     Write-Host "Commands:" -ForegroundColor White
-    Write-Host "  cn on          - Enable notifications globally" -ForegroundColor Gray
-    Write-Host "  cn off         - Disable notifications" -ForegroundColor Gray
-    Write-Host "  cn status      - Check status" -ForegroundColor Gray
-    Write-Host "  cn test        - Send test notification" -ForegroundColor Gray
-    Write-Host "  cn voice on    - Enable voice notifications" -ForegroundColor Gray
-    Write-Host "  cnp on         - Enable for current project only" -ForegroundColor Gray
+    Write-Host "  an on          - Enable notifications globally" -ForegroundColor Gray
+    Write-Host "  an off         - Disable notifications" -ForegroundColor Gray
+    Write-Host "  an status      - Check status" -ForegroundColor Gray
+    Write-Host "  an test        - Send test notification" -ForegroundColor Gray
+    Write-Host "  an voice on    - Enable voice notifications" -ForegroundColor Gray
+    Write-Host "  anp on         - Enable for current project only" -ForegroundColor Gray
     Write-Host ""
     Write-Host "For enhanced notifications (recommended):" -ForegroundColor White
     Write-Host "  Install-Module -Name BurntToast -Scope CurrentUser" -ForegroundColor Cyan

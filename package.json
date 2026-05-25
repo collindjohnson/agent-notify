@@ -1,15 +1,15 @@
 {
-  "name": "code-notify",
+  "name": "agent-notify",
   "version": "1.7.4",
   "description": "Desktop notifications for Claude Code, OpenAI Codex, Gemini CLI, and Cursor Agent",
   "license": "MIT",
-  "homepage": "https://github.com/mylee04/code-notify#readme",
+  "homepage": "https://github.com/collindjohnson/agent-notify#readme",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/mylee04/code-notify.git"
+    "url": "git+https://github.com/collindjohnson/agent-notify.git"
   },
   "bugs": {
-    "url": "https://github.com/mylee04/code-notify/issues"
+    "url": "https://github.com/collindjohnson/agent-notify/issues"
   },
   "keywords": [
     "ai",
@@ -24,9 +24,10 @@
     "node": ">=18"
   },
   "bin": {
+    "agent-notify": "bin/npm-code-notify.js",
     "code-notify": "bin/npm-code-notify.js",
-    "cn": "bin/npm-cn.js",
-    "cnp": "bin/npm-cnp.js"
+    "an": "bin/npm-an.js",
+    "anp": "bin/npm-anp.js"
   },
   "files": [
     "LICENSE",

@@ -92,7 +92,7 @@ show_click_through_status() {
     local line key value
 
     if ! click_through_has_entries; then
-        info "No click-through mappings found. Run ${BOLD}cn click-through add${RESET} to set up."
+        info "No click-through mappings found. Run ${BOLD}an click-through add${RESET} to set up."
         return 0
     fi
 
@@ -148,7 +148,7 @@ run_click_through_add() {
         if [[ -n "$existing_term" ]]; then
             echo ""
             info "Mapping already exists: ${BOLD}${existing_term}${RESET} -> ${DIM}${bundle_id}${RESET}"
-            dim "  Run ${BOLD}cn click-through remove${RESET} to delete it."
+            dim "  Run ${BOLD}an click-through remove${RESET} to delete it."
             return 0
         fi
     fi
@@ -304,10 +304,10 @@ run_click_through_remove() {
 show_click_through_help() {
     cat << EOF
 
-${BOLD}cn click-through${RESET} - Configure which app opens when a notification is clicked
+${BOLD}an click-through${RESET} - Configure which app opens when a notification is clicked
 
 ${BOLD}USAGE:${RESET}
-    cn click-through [command] [args]
+    an click-through [command] [args]
 
 ${BOLD}COMMANDS:${RESET}
     ${GREEN}status${RESET}           Show current mappings (default)
@@ -319,11 +319,11 @@ ${BOLD}COMMANDS:${RESET}
     Note: controls which app Code-Notify activates when you click a macOS notification.
 
 ${BOLD}EXAMPLES:${RESET}
-    cn click-through
-    cn click-through add
-    cn click-through add Ghostty
-    cn click-through remove
-    cn click-through reset
+    an click-through
+    an click-through add
+    an click-through add Ghostty
+    an click-through remove
+    an click-through reset
 
 EOF
 }

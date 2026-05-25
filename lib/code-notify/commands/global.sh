@@ -282,9 +282,9 @@ handle_update_command() {
             check_for_updates
             ;;
         "help"|"-h"|"--help")
-            echo "Usage: cn update [check]"
-            echo "  cn update        Update the current installation"
-            echo "  cn update check  Show which update command will be used"
+            echo "Usage: an update [check]"
+            echo "  an update        Update the current installation"
+            echo "  an update check  Show which update command will be used"
             ;;
         *)
             method=$(detect_update_method)
@@ -305,7 +305,7 @@ handle_update_command() {
                     ;;
                 *)
                     warning "Local checkout or unsupported install method detected"
-                    info "Use ${CYAN}cn update check${RESET} for guidance"
+                    info "Use ${CYAN}an update check${RESET} for guidance"
                     return 1
                     ;;
             esac
@@ -537,7 +537,7 @@ show_status() {
             echo "  ${WARNING} Claude Code: ${YELLOW}REPAIR NEEDED${RESET}"
             echo "     Config: $GLOBAL_SETTINGS_FILE"
             echo "     Current hooks still point to an older claude-notify-style configuration"
-            echo "     Run: ${CYAN}cn on claude${RESET}"
+            echo "     Run: ${CYAN}an on claude${RESET}"
         elif is_tool_enabled "claude"; then
             echo "  ${CHECK_MARK} Claude Code: ${GREEN}ENABLED${RESET}"
             echo "     Config: $GLOBAL_SETTINGS_FILE"
@@ -581,7 +581,7 @@ show_status() {
             echo "     Usage: cursor-notify [cursor agent options] [prompt...]"
         else
             echo "  ${MUTE} Cursor Agent: ${DIM}DISABLED${RESET}"
-            echo "     Run: ${CYAN}cn on cursor${RESET} to install the cursor-notify wrapper"
+            echo "     Run: ${CYAN}an on cursor${RESET} to install the cursor-notify wrapper"
         fi
     else
         echo "  ${DIM}- Cursor Agent: not installed${RESET}"
@@ -825,22 +825,22 @@ run_setup_wizard() {
     if [[ $REPLY =~ ^[Yy]$ ]]; then
         enable_notifications_global
     else
-        info "You can enable notifications later with: ${CYAN}cn on${RESET}"
+        info "You can enable notifications later with: ${CYAN}an on${RESET}"
     fi
     
     echo ""
     success "Setup complete!"
     echo ""
     echo "Quick commands:"
-    echo "  ${CYAN}cn on${RESET}     - Enable notifications"
-    echo "  ${CYAN}cn off${RESET}    - Disable notifications"
-    echo "  ${CYAN}cn status${RESET} - Check status"
-    echo "  ${CYAN}cnp on${RESET}    - Enable for current project"
+    echo "  ${CYAN}an on${RESET}     - Enable notifications"
+    echo "  ${CYAN}an off${RESET}    - Disable notifications"
+    echo "  ${CYAN}an status${RESET} - Check status"
+    echo "  ${CYAN}anp on${RESET}    - Enable for current project"
     echo ""
 }
 
 # Handle voice commands
-# Usage: cn voice on [tool], cn voice off [tool], cn voice status
+# Usage: an voice on [tool], an voice off [tool], an voice status
 handle_voice_command() {
     local subcommand="${1:-status}"
     local tool="${2:-}"
@@ -926,10 +926,10 @@ show_voice_status() {
 
     echo ""
     info "Commands:"
-    echo "  ${CYAN}cn voice on${RESET}          Enable for all tools"
-    echo "  ${CYAN}cn voice on claude${RESET}   Enable for Claude only"
-    echo "  ${CYAN}cn voice off${RESET}         Disable all"
-    echo "  ${CYAN}cn voice off codex${RESET}   Disable for Codex only"
+    echo "  ${CYAN}an voice on${RESET}          Enable for all tools"
+    echo "  ${CYAN}an voice on claude${RESET}   Enable for Claude only"
+    echo "  ${CYAN}an voice off${RESET}         Disable all"
+    echo "  ${CYAN}an voice off codex${RESET}   Disable for Codex only"
 }
 
 # ============================================
@@ -937,7 +937,7 @@ show_voice_status() {
 # ============================================
 
 # Handle alerts commands
-# Usage: cn alerts, cn alerts add <type>, cn alerts remove <type>, cn alerts reset
+# Usage: an alerts, an alerts add <type>, an alerts remove <type>, an alerts reset
 handle_alerts_command() {
     local subcommand="${1:-}"
     local type="${2:-}"
@@ -1046,17 +1046,17 @@ show_alerts_status() {
 
     echo ""
     info "Examples:"
-    echo "  ${CYAN}cn alerts add permission_prompt${RESET}   # Also notify on tool permission requests"
-    echo "  ${CYAN}cn alerts add SubagentStop${RESET}        # Notify when Claude subagents finish"
-    echo "  ${CYAN}cn alerts add auth_success${RESET}        # Also notify on auth success"
-    echo "  ${CYAN}cn alerts remove permission_prompt${RESET} # Stop permission notifications"
-    echo "  ${CYAN}cn alerts reset${RESET}                   # Back to idle_prompt only"
+    echo "  ${CYAN}an alerts add permission_prompt${RESET}   # Also notify on tool permission requests"
+    echo "  ${CYAN}an alerts add SubagentStop${RESET}        # Notify when Claude subagents finish"
+    echo "  ${CYAN}an alerts add auth_success${RESET}        # Also notify on auth success"
+    echo "  ${CYAN}an alerts remove permission_prompt${RESET} # Stop permission notifications"
+    echo "  ${CYAN}an alerts reset${RESET}                   # Back to idle_prompt only"
     echo ""
     dim "Alert-type matching applies to Claude Code and Gemini CLI hooks."
     dim "Claude agent/team events are separate hooks and are opt-in."
     dim "Codex currently exposes completion events through notify, so permission_prompt/idle_prompt settings do not change Codex behavior."
     echo ""
-    dim "After changing, run 'cn on' to apply the new settings."
+    dim "After changing, run 'an on' to apply the new settings."
 }
 
 # Show available alert types
@@ -1097,7 +1097,7 @@ add_alert_type() {
     add_notify_type "$type"
     success "Added: $type"
     echo ""
-    info "Run ${CYAN}cn on${RESET} to apply changes"
+    info "Run ${CYAN}an on${RESET} to apply changes"
 }
 
 # Remove an alert type
@@ -1120,7 +1120,7 @@ remove_alert_type() {
     remove_notify_type "$type"
     success "Removed: $type"
     echo ""
-    info "Run ${CYAN}cn on${RESET} to apply changes"
+    info "Run ${CYAN}an on${RESET} to apply changes"
 }
 
 # Reset alert types to default
@@ -1128,13 +1128,13 @@ reset_alert_types() {
     reset_notify_types
     success "Reset to default: idle_prompt"
     echo ""
-    info "Run ${CYAN}cn on${RESET} to apply changes"
+    info "Run ${CYAN}an on${RESET} to apply changes"
 }
 
 # Show alerts help
 show_alerts_help() {
     echo ""
-    echo "Usage: cn alerts [command] [type]"
+    echo "Usage: an alerts [command] [type]"
     echo ""
     echo "Commands:"
     echo "  (none)         Show current alert type configuration"
@@ -1145,11 +1145,11 @@ show_alerts_help() {
     show_available_alert_types
     echo ""
     echo "Examples:"
-    echo "  cn alerts                        # Show current config"
-    echo "  cn alerts add permission_prompt  # Also notify on permission requests"
-    echo "  cn alerts add SubagentStop       # Also notify when Claude subagents finish"
-    echo "  cn alerts remove permission_prompt"
-    echo "  cn alerts reset                  # Back to idle_prompt only"
+    echo "  an alerts                        # Show current config"
+    echo "  an alerts add permission_prompt  # Also notify on permission requests"
+    echo "  an alerts add SubagentStop       # Also notify when Claude subagents finish"
+    echo "  an alerts remove permission_prompt"
+    echo "  an alerts reset                  # Back to idle_prompt only"
 }
 
 # ============================================
@@ -1157,7 +1157,7 @@ show_alerts_help() {
 # ============================================
 
 # Handle sound commands
-# Usage: cn sound on, cn sound off, cn sound set <path>, cn sound test, etc.
+# Usage: an sound on, an sound off, an sound set <path>, an sound test, etc.
 handle_sound_command() {
     local subcommand="${1:-status}"
     shift 2>/dev/null || true
@@ -1184,8 +1184,8 @@ handle_sound_command() {
             if [[ -z "$sound_path" ]]; then
                 error "Please provide a path to a sound file"
                 echo ""
-                echo "Usage: cn sound set <path>"
-                echo "Example: cn sound set ~/sounds/notification.wav"
+                echo "Usage: an sound set <path>"
+                echo "Example: an sound set ~/sounds/notification.wav"
                 return 1
             fi
             header "${BELL} Setting Custom Sound"
@@ -1218,7 +1218,7 @@ handle_sound_command() {
                 success "Sound played!"
             else
                 warning "Sound is disabled"
-                info "Enable with: cn sound on"
+                info "Enable with: an sound on"
             fi
             ;;
         "list")
@@ -1253,10 +1253,10 @@ show_sound_status() {
 
     echo ""
     info "Commands:"
-    echo "  ${CYAN}cn sound on${RESET}              Enable with default system sound"
-    echo "  ${CYAN}cn sound off${RESET}             Disable sound notifications"
-    echo "  ${CYAN}cn sound set <path>${RESET}      Use custom sound file"
-    echo "  ${CYAN}cn sound default${RESET}         Reset to system default"
-    echo "  ${CYAN}cn sound test${RESET}            Play current sound"
-    echo "  ${CYAN}cn sound list${RESET}            Show available system sounds"
+    echo "  ${CYAN}an sound on${RESET}              Enable with default system sound"
+    echo "  ${CYAN}an sound off${RESET}             Disable sound notifications"
+    echo "  ${CYAN}an sound set <path>${RESET}      Use custom sound file"
+    echo "  ${CYAN}an sound default${RESET}         Reset to system default"
+    echo "  ${CYAN}an sound test${RESET}            Play current sound"
+    echo "  ${CYAN}an sound list${RESET}            Show available system sounds"
 }

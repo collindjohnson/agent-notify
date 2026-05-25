@@ -150,8 +150,8 @@ fi
 
 # Create symlinks
 ln -sf "$INSTALL_DIR/bin/code-notify" "$BIN_DIR/code-notify"
-ln -sf "$INSTALL_DIR/bin/code-notify" "$BIN_DIR/cn"
-ln -sf "$INSTALL_DIR/bin/code-notify" "$BIN_DIR/cnp"
+ln -sf "$INSTALL_DIR/bin/code-notify" "$BIN_DIR/an"
+ln -sf "$INSTALL_DIR/bin/code-notify" "$BIN_DIR/anp"
 
 # Repair stale Claude hooks from older claude-notify installs when present.
 "$INSTALL_DIR/bin/code-notify" repair-hooks --quiet || true
@@ -170,6 +170,6 @@ fi
 
 echo "Run these commands to get started:"
 echo "  code-notify setup    # Initial setup"
-echo "  cn on                  # Enable notifications"
+echo "  an on                  # Enable notifications"
 echo ""
 echo "For more info: https://github.com/mylee04/code-notify"

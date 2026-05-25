@@ -2,13 +2,13 @@
 
 ## Summary
 
-Critical bug fix: `cn off` was destroying all user settings in `settings.json` instead of only removing notification hooks.
+Critical bug fix: `an off` was destroying all user settings in `settings.json` instead of only removing notification hooks.
 
 ## The Problem
 
 ### Before Fix (Bug Behavior)
 
-When users run `cn off` to disable notifications, the original code **overwrites the entire settings file**:
+When users run `an off` to disable notifications, the original code **overwrites the entire settings file**:
 
 ```bash
 # User's original ~/.claude/settings.json
@@ -22,7 +22,7 @@ When users run `cn off` to disable notifications, the original code **overwrites
   }
 }
 
-# After running `cn off` (BUGGY!)
+# After running `an off` (BUGGY!)
 {
   "model": "opus"   # ← ALL OTHER SETTINGS DESTROYED!
 }
@@ -50,7 +50,7 @@ Users lost:
 
 ### After Fix (Correct Behavior)
 
-Now `cn off` only removes the `hooks` section while preserving all other settings:
+Now `an off` only removes the `hooks` section while preserving all other settings:
 
 ```bash
 # User's original ~/.claude/settings.json
@@ -64,7 +64,7 @@ Now `cn off` only removes the `hooks` section while preserving all other setting
   }
 }
 
-# After running `cn on` (adds hooks, preserves settings)
+# After running `an on` (adds hooks, preserves settings)
 {
   "model": "sonnet",                    # ← PRESERVED
   "permissions": {                      # ← PRESERVED
@@ -79,7 +79,7 @@ Now `cn off` only removes the `hooks` section while preserving all other setting
   }
 }
 
-# After running `cn off` (removes hooks, preserves settings)
+# After running `an off` (removes hooks, preserves settings)
 {
   "model": "sonnet",                    # ← STILL PRESERVED
   "permissions": {                      # ← STILL PRESERVED

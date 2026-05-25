@@ -78,8 +78,8 @@ jobs:
           "$env:USERPROFILE\.code-notify\lib\CodeNotify.psm1",
           "$env:USERPROFILE\.code-notify\lib\ClaudeNotify.psm1",
           "$env:USERPROFILE\.code-notify\bin\code-notify.ps1",
-          "$env:USERPROFILE\.code-notify\bin\cn.ps1",
-          "$env:USERPROFILE\.code-notify\bin\cnp.ps1",
+          "$env:USERPROFILE\.code-notify\bin\an.ps1",
+          "$env:USERPROFILE\.code-notify\bin\anp.ps1",
           "$env:USERPROFILE\.claude\notifications\notify.ps1"
         )
 
@@ -107,36 +107,36 @@ jobs:
 
     - name: Test CLI commands (help)
       run: |
-        & "$env:USERPROFILE\.code-notify\bin\cn.ps1" help
+        & "$env:USERPROFILE\.code-notify\bin\an.ps1" help
 
     - name: Test CLI commands (version)
       run: |
-        & "$env:USERPROFILE\.code-notify\bin\cn.ps1" version
+        & "$env:USERPROFILE\.code-notify\bin\an.ps1" version
 
     - name: Test CLI commands (version shortcut)
       run: |
-        $versionOutput = & "$env:USERPROFILE\.code-notify\bin\cn.ps1" -v | Out-String
+        $versionOutput = & "$env:USERPROFILE\.code-notify\bin\an.ps1" -v | Out-String
         Write-Host $versionOutput
 
         if ($versionOutput -match 'VERBOSE:') {
-          Write-Host "ERROR: cn -v leaked PowerShell verbose import output" -ForegroundColor Red
+          Write-Host "ERROR: an -v leaked PowerShell verbose import output" -ForegroundColor Red
           exit 1
         }
 
         if ($versionOutput -notmatch 'code-notify version') {
-          Write-Host "ERROR: cn -v did not resolve to the version command" -ForegroundColor Red
+          Write-Host "ERROR: an -v did not resolve to the version command" -ForegroundColor Red
           exit 1
         }
 
     - name: Test CLI commands (status)
       run: |
-        & "$env:USERPROFILE\.code-notify\bin\cn.ps1" status
+        & "$env:USERPROFILE\.code-notify\bin\an.ps1" status
 
     - name: Test update check command
       run: |
-        $currentVersion = ((& "$env:USERPROFILE\.code-notify\bin\cn.ps1" version | Out-String).Trim() -replace '^.*version\s+', '')
+        $currentVersion = ((& "$env:USERPROFILE\.code-notify\bin\an.ps1" version | Out-String).Trim() -replace '^.*version\s+', '')
         $env:CODE_NOTIFY_LATEST_VERSION = $currentVersion
-        $updateOutput = & "$env:USERPROFILE\.code-notify\bin\cn.ps1" update check | Out-String
+        $updateOutput = & "$env:USERPROFILE\.code-notify\bin\an.ps1" update check | Out-String
         Write-Host $updateOutput
 
         if ($updateOutput -notmatch 'Code-Notify is up to date') {
@@ -151,9 +151,9 @@ jobs:
 
     - name: Test no-op update command
       run: |
-        $currentVersion = ((& "$env:USERPROFILE\.code-notify\bin\cn.ps1" version | Out-String).Trim() -replace '^.*version\s+', '')
+        $currentVersion = ((& "$env:USERPROFILE\.code-notify\bin\an.ps1" version | Out-String).Trim() -replace '^.*version\s+', '')
         $env:CODE_NOTIFY_LATEST_VERSION = $currentVersion
-        $updateOutput = & "$env:USERPROFILE\.code-notify\bin\cn.ps1" update | Out-String
+        $updateOutput = & "$env:USERPROFILE\.code-notify\bin\an.ps1" update | Out-String
         Write-Host $updateOutput
 
         if ($updateOutput -notmatch 'Code-Notify is up to date') {
@@ -181,7 +181,7 @@ jobs:
     - name: Test enable/disable notifications
       run: |
         # Enable
-        & "$env:USERPROFILE\.code-notify\bin\cn.ps1" on all
+        & "$env:USERPROFILE\.code-notify\bin\an.ps1" on all
 
         # Check settings.json was created with hooks
         $settingsFile = "$env:USERPROFILE\.claude\settings.json"
@@ -198,7 +198,7 @@ jobs:
         Write-Host "OK: Notifications enabled, hooks configured" -ForegroundColor Green
 
         # Disable
-        & "$env:USERPROFILE\.code-notify\bin\cn.ps1" off all
+        & "$env:USERPROFILE\.code-notify\bin\an.ps1" off all
 
         if (Test-Path $settingsFile) {
           $settings = Get-Content $settingsFile -Raw | ConvertFrom-Json
@@ -211,7 +211,7 @@ jobs:
 
     - name: Test tool-specific commands
       run: |
-        & "$env:USERPROFILE\.code-notify\bin\cn.ps1" on codex
+        & "$env:USERPROFILE\.code-notify\bin\an.ps1" on codex
 
         $codexConfig = "$env:USERPROFILE\.codex\config.toml"
         if (-not (Test-Path $codexConfig)) {
@@ -226,7 +226,7 @@ jobs:
         }
         Write-Host "OK: Codex notifications enabled" -ForegroundColor Green
 
-        & "$env:USERPROFILE\.code-notify\bin\cn.ps1" off codex
+        & "$env:USERPROFILE\.code-notify\bin\an.ps1" off codex
 
         $codexContent = Get-Content $codexConfig -Raw
         if ($codexContent -match 'notify\s*=') {
@@ -257,7 +257,7 @@ jobs:
         $trustConfig | ConvertTo-Json -Depth 10 | Set-Content "$env:USERPROFILE\.claude.json" -Encoding UTF8
 
         # Enable project notifications
-        $projectOutput = & "$env:USERPROFILE\.code-notify\bin\cnp.ps1" on | Out-String
+        $projectOutput = & "$env:USERPROFILE\.code-notify\bin\anp.ps1" on | Out-String
         Write-Host $projectOutput
 
         if ($projectOutput -notmatch 'trust does not appear to be accepted') {
@@ -273,10 +273,10 @@ jobs:
         Write-Host "OK: Project notifications enabled" -ForegroundColor Green
 
         # Check status
-        & "$env:USERPROFILE\.code-notify\bin\cnp.ps1" status
+        & "$env:USERPROFILE\.code-notify\bin\anp.ps1" status
 
         # Disable
-        & "$env:USERPROFILE\.code-notify\bin\cnp.ps1" off
+        & "$env:USERPROFILE\.code-notify\bin\anp.ps1" off
         Write-Host "OK: Project notifications disabled" -ForegroundColor Green
 
     - name: Test notification script
@@ -320,6 +320,6 @@ jobs:
 
     - name: Basic functionality test
       run: |
-        & "$env:USERPROFILE\.code-notify\bin\cn.ps1" version
-        & "$env:USERPROFILE\.code-notify\bin\cn.ps1" status
+        & "$env:USERPROFILE\.code-notify\bin\an.ps1" version
+        & "$env:USERPROFILE\.code-notify\bin\an.ps1" status
         Write-Host "OK: Basic functionality works on Windows Server 2022" -ForegroundColor Green

@@ -119,17 +119,17 @@ jobs:
         fi
         echo "OK: code-notify symlink exists"
 
-        if [[ ! -L "$BIN_DIR/cn" ]]; then
-          echo "ERROR: cn symlink not created"
+        if [[ ! -L "$BIN_DIR/an" ]]; then
+          echo "ERROR: an symlink not created"
           exit 1
         fi
-        echo "OK: cn symlink exists"
+        echo "OK: an symlink exists"
 
-        if [[ ! -L "$BIN_DIR/cnp" ]]; then
-          echo "ERROR: cnp symlink not created"
+        if [[ ! -L "$BIN_DIR/anp" ]]; then
+          echo "ERROR: anp symlink not created"
           exit 1
         fi
-        echo "OK: cnp symlink exists"
+        echo "OK: anp symlink exists"
 
     - name: Add to PATH and test CLI
       run: |
@@ -145,18 +145,18 @@ jobs:
       run: |
         export PATH="$HOME/.local/bin:$PATH"
 
-        # Test cn alias
-        cn version
-        cn help
+        # Test an alias
+        an version
+        an help
 
         # Test status
-        cn status
+        an status
 
     - name: Test update check command
       run: |
         export PATH="$HOME/.local/bin:$PATH"
-        CURRENT_VERSION="$(cn version | awk '{print $3}')"
-        UPDATE_OUTPUT="$(CODE_NOTIFY_LATEST_VERSION="$CURRENT_VERSION" cn update check)"
+        CURRENT_VERSION="$(an version | awk '{print $3}')"
+        UPDATE_OUTPUT="$(CODE_NOTIFY_LATEST_VERSION="$CURRENT_VERSION" an update check)"
         echo "$UPDATE_OUTPUT"
 
         if ! echo "$UPDATE_OUTPUT" | grep -q 'Code-Notify is up to date'; then
@@ -172,8 +172,8 @@ jobs:
     - name: Test no-op update command
       run: |
         export PATH="$HOME/.local/bin:$PATH"
-        CURRENT_VERSION="$(cn version | awk '{print $3}')"
-        UPDATE_OUTPUT="$(CODE_NOTIFY_LATEST_VERSION="$CURRENT_VERSION" cn update)"
+        CURRENT_VERSION="$(an version | awk '{print $3}')"
+        UPDATE_OUTPUT="$(CODE_NOTIFY_LATEST_VERSION="$CURRENT_VERSION" an update)"
         echo "$UPDATE_OUTPUT"
 
         if ! echo "$UPDATE_OUTPUT" | grep -q 'Code-Notify is up to date'; then
@@ -190,7 +190,7 @@ jobs:
         export PATH="$HOME/.local/bin:$PATH"
 
         # Enable
-        cn on all
+        an on all
 
         # Check settings.json was created with hooks
         SETTINGS_FILE="$HOME/.claude/settings.json"
@@ -206,7 +206,7 @@ jobs:
         echo "OK: Notifications enabled, hooks configured"
 
         # Disable
-        cn off all
+        an off all
 
         if jq -e '.hooks' "$SETTINGS_FILE" > /dev/null 2>&1; then
           echo "ERROR: hooks not removed from settings"
@@ -240,7 +240,7 @@ jobs:
         EOF
 
         # Enable project notifications
-        PROJECT_OUTPUT="$(cnp on)"
+        PROJECT_OUTPUT="$(anp on)"
         echo "$PROJECT_OUTPUT"
 
         if ! echo "$PROJECT_OUTPUT" | grep -q 'trust does not appear to be accepted'; then
@@ -256,10 +256,10 @@ jobs:
         echo "OK: Project notifications enabled"
 
         # Check status
-        cnp status
+        anp status
 
         # Disable
-        cnp off
+        anp off
         echo "OK: Project notifications disabled"
 
     - name: Test notifier script
