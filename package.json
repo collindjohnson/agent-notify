@@ -37,6 +37,6 @@
     "scripts/npm-postinstall.js"
   ],
   "scripts": {
-    "postinstall": "cd / && node \"$npm_package_json/../scripts/npm-postinstall.js\""
+    "postinstall": "script=\"${npm_package_json%/package.json}/scripts/npm-postinstall.js\"; test ! -f \"$script\" || (cd / && node \"$script\")"
   }
 }
