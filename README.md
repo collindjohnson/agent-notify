@@ -99,8 +99,6 @@ curl -s https://raw.githubusercontent.com/collindjohnson/agent-notify/main/docs/
 
 ## Usage
 
-![an help output](assets/an-help.png)
-
 | Command              | Description                                  |
 | -------------------- | -------------------------------------------- |
 | `an on`              | Enable notifications for all detected tools  |
